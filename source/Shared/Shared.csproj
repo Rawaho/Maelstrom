@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{758D086D-B10F-4468-A1A3-367CC647D024}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Shared</RootNamespace>
+    <AssemblyName>Shared</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.0.0\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=7.0.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.7.0.7-m61\lib\net451\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Command\CommandHandlerAttribute.cs" />
+    <Compile Include="Command\CommandManager.cs" />
+    <Compile Include="Cryptography\Blowfish.cs" />
+    <Compile Include="Cryptography\HashProvider.cs" />
+    <Compile Include="Cryptography\XxHash.cs" />
+    <Compile Include="Database\Authentication\ServiceAccountInfo.cs" />
+    <Compile Include="Database\Authentication\AuthenticationDatabase.cs" />
+    <Compile Include="Database\DatabaseTransaction.cs" />
+    <Compile Include="Database\Datacentre\CharacterAppearanceInfo.cs" />
+    <Compile Include="Database\Datacentre\CharacterClassInfo.cs" />
+    <Compile Include="Database\Datacentre\CharacterInfo.cs" />
+    <Compile Include="Database\Datacentre\RealmInfo.cs" />
+    <Compile Include="Database\Authentication\VersionInfo.cs" />
+    <Compile Include="Database\ConfigMySqlDatabase.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\DatabaseManager.cs" />
+    <Compile Include="Database\Datacentre\DatacentreDatabase.cs" />
+    <Compile Include="Database\Extensions.cs" />
+    <Compile Include="Database\MySqlResult.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Database\StoredPreparedStatement.cs" />
+    <Compile Include="Database\World\WorldDatabase.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Game\Enum\ClassJob.cs" />
+    <Compile Include="Game\Enum\Expansion.cs" />
+    <Compile Include="Game\Enum\Race.cs" />
+    <Compile Include="Game\QueuedCounter.cs" />
+    <Compile Include="Game\SecurityLevel.cs" />
+    <Compile Include="Game\WorldPosition.cs" />
+    <Compile Include="JsonProvider.cs" />
+    <Compile Include="Network\Connection.cs" />
+    <Compile Include="Network\ConnectionHeartbeat.cs" />
+    <Compile Include="Network\SubPacketDirection.cs" />
+    <Compile Include="Network\Extensions.cs" />
+    <Compile Include="Network\FloodInfo.cs" />
+    <Compile Include="Network\FloodManager.cs" />
+    <Compile Include="Network\Handler\MiscHandler.cs" />
+    <Compile Include="Network\Message\KeepAliveRequest.cs" />
+    <Compile Include="Network\Message\KeepAliveResponse.cs" />
+    <Compile Include="Network\NetworkManager.cs" />
+    <Compile Include="Network\PacketManager.cs" />
+    <Compile Include="Network\ConnectionChannel.cs" />
+    <Compile Include="Network\PendingSubPacket.cs" />
+    <Compile Include="Network\Session.cs" />
+    <Compile Include="Network\SessionAttribute.cs" />
+    <Compile Include="Network\SubPacketHandlerAttribute.cs" />
+    <Compile Include="Network\SubPacketOpcode.cs" />
+    <Compile Include="Network\Packet.cs" />
+    <Compile Include="Network\PacketResult.cs" />
+    <Compile Include="Network\SubPacket.cs" />
+    <Compile Include="Network\SubPacketAttribute.cs" />
+    <Compile Include="Network\SubPacketType.cs" />
+    <Compile Include="Network\ZlibProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqPack\BinaryReaderBigEndian.cs" />
+    <Compile Include="SqPack\Exd.cs" />
+    <Compile Include="SqPack\ExdDataType.cs" />
+    <Compile Include="SqPack\ExdLanguage.cs" />
+    <Compile Include="SqPack\ExdTable.cs" />
+    <Compile Include="SqPack\Exh.cs" />
+    <Compile Include="SqPack\GameTableManager.cs" />
+    <Compile Include="SqPack\GameTable\ClassJobEntry.cs" />
+    <Compile Include="SqPack\GameTable\ItemEntry.cs" />
+    <Compile Include="SqPack\GameTable\PlaceNameEntry.cs" />
+    <Compile Include="SqPack\GameTable\RaceEntry.cs" />
+    <Compile Include="SqPack\GameTable\TerritoryTypeEntry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

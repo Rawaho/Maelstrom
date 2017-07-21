@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BB76220C-32E2-4E0E-96FA-C8B93943C38A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>WorldServer</RootNamespace>
+    <AssemblyName>WorldServer</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Command\ActorHandler.cs" />
+    <Compile Include="Command\LookupHandler.cs" />
+    <Compile Include="Command\MiscHandler.cs" />
+    <Compile Include="Game\Actor.cs" />
+    <Compile Include="Game\ActorType.cs" />
+    <Compile Include="Game\Map\BaseMap.cs" />
+    <Compile Include="Game\Map\SearchCheck.cs" />
+    <Compile Include="Game\Map\SearchCheckRange.cs" />
+    <Compile Include="Game\Map\WorldCell.cs" />
+    <Compile Include="Game\Map\WorldGrid.cs" />
+    <Compile Include="Game\Map\MapManager.cs" />
+    <Compile Include="Game\Map\Territory.cs" />
+    <Compile Include="Game\Map\Vector2G.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Manager\ChatManager.cs" />
+    <Compile Include="Manager\ConfigManager.cs" />
+    <Compile Include="Manager\UpdateManager.cs" />
+    <Compile Include="Network\ActorActionHandlerAttribute.cs" />
+    <Compile Include="Network\ActorAction.cs" />
+    <Compile Include="Network\ActorActionManager.cs" />
+    <Compile Include="Network\ChatSession.cs" />
+    <Compile Include="Network\Extensions.cs" />
+    <Compile Include="Network\GmCommand.cs" />
+    <Compile Include="Network\GmCommandHandlerAttribute.cs" />
+    <Compile Include="Network\GmCommandManager.cs" />
+    <Compile Include="Network\GmCommandParameters.cs" />
+    <Compile Include="Network\Handler\ActorHandler.cs" />
+    <Compile Include="Network\Handler\AuthenticationHandler.cs" />
+    <Compile Include="Network\Handler\ChatHandler.cs" />
+    <Compile Include="Network\Handler\GmCommandHandler.cs" />
+    <Compile Include="Network\Handler\MiscHandler.cs" />
+    <Compile Include="Network\Message\ClientActorAction.cs" />
+    <Compile Include="Network\Message\ClientChat.cs" />
+    <Compile Include="Network\Message\ClientGmCommandString.cs" />
+    <Compile Include="Network\Message\ClientHelloWorld.cs" />
+    <Compile Include="Network\Message\ClientPlayerMove.cs" />
+    <Compile Include="Network\Message\ClientGmCommandInt.cs" />
+    <Compile Include="Network\Message\ServerActorAction1.cs" />
+    <Compile Include="Network\Message\ServerActorAction2.cs" />
+    <Compile Include="Network\Message\ServerActorAction3.cs" />
+    <Compile Include="Network\Message\ServerActorMove.cs" />
+    <Compile Include="Network\Message\ServerChat.cs" />
+    <Compile Include="Network\Message\ServerClassSetup.cs" />
+    <Compile Include="Network\Message\ServerError.cs" />
+    <Compile Include="Network\Message\ServerHelloWorld.cs" />
+    <Compile Include="Network\Message\ServerLogout.cs" />
+    <Compile Include="Network\Message\ServerMessage.cs" />
+    <Compile Include="Network\Message\ServerPlayerSetup.cs" />
+    <Compile Include="Network\Message\ServerQuestJournalActiveList.cs" />
+    <Compile Include="Network\Message\ServerQuestJournalCompleteList.cs" />
+    <Compile Include="Network\Message\ServerPlayerSpawn.cs" />
+    <Compile Include="Network\Message\ServerNewWorld.cs" />
+    <Compile Include="Network\Message\ServerTerritoryPending.cs" />
+    <Compile Include="Network\Message\ServerTerritorySetup.cs" />
+    <Compile Include="Network\Message\ServerUnknown01FB.cs" />
+    <Compile Include="Network\Message\ServerUnknown01FD.cs" />
+    <Compile Include="Network\WorldSession.cs" />
+    <Compile Include="WorldServer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="WorldConfig.example.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\Spell\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{758d086d-b10f-4468-a1a3-367cc647d024}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

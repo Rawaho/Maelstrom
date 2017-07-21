@@ -1,0 +1,28 @@
+﻿{
+  "MySql": {
+    "Authentication": {
+      "Host": "127.0.0.1",
+      "Port": 3306,
+      "Database": "maelstrom_authentication",
+      "Username": "root",
+      "Password": ""
+    },
+    "DataCentre": {
+      "Host": "127.0.0.1",
+      "Port": 3306,
+      "Database": "maelstrom_datacentre",
+      "Username": "root",
+      "Password": ""
+    },
+    "World": {
+      "Host": "127.0.0.1",
+      "Port": 3306,
+      "Database": "maelstrom_world",
+      "Username": "root",
+      "Password": ""
+    }
+  },
+    "Server": {
+        "LobbyPort": 54994
+    }
+}
