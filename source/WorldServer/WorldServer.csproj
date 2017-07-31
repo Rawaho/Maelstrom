@@ -81,12 +81,16 @@
     <Compile Include="Network\GmCommandHandlerAttribute.cs" />
     <Compile Include="Network\GmCommandManager.cs" />
     <Compile Include="Network\GmCommandParameters.cs" />
+    <Compile Include="Network\ContentFinderLanguage.cs" />
     <Compile Include="Network\Handler\ActorHandler.cs" />
     <Compile Include="Network\Handler\AuthenticationHandler.cs" />
     <Compile Include="Network\Handler\ChatHandler.cs" />
     <Compile Include="Network\Handler\GmCommandHandler.cs" />
     <Compile Include="Network\Handler\ItemHandler.cs" />
     <Compile Include="Network\Handler\MiscHandler.cs" />
+    <Compile Include="Network\Message\ServerContentFinderMemberStatus.cs" />
+    <Compile Include="Network\Message\ServerContentFinderRegister.cs" />
+    <Compile Include="Network\Message\ServerContentFinderNotify.cs" />
     <Compile Include="Network\Message\ClientActorAction.cs" />
     <Compile Include="Network\Message\ClientChat.cs" />
     <Compile Include="Network\Message\ClientGmCommandString.cs" />
