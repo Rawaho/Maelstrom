@@ -32,6 +32,9 @@
         ServerPlayerSetup              = 0x011E,
         ServerPlayerStateFlags         = 0x0121,
         ServerClassSetup               = 0x0123,
+        ServerContentFinderNotify       = 0x0078,
+        ServerContentFinderMemberStatus = 0x0079,
+        ServerContentFinderRegister     = 0x00B0,
         // all 3 invoke the same client function just with different parameters
         ServerActorAction1             = 0x0142,
         ServerActorAction2             = 0x0143,
