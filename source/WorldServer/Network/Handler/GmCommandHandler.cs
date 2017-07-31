@@ -27,5 +27,11 @@ namespace WorldServer.Network.Handler
             {
             }
         }
+
+        [GmCommandHandler(GmCommand.Item)]
+        public static void HandleGmCommandItem(WorldSession session, GmCommandParameters parameters)
+        {
+            session.Player.Inventory.NewItem(parameters.Parameters[0], parameters.Parameters[1]);
+        }
     }
 }

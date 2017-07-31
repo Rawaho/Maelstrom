@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Shared.Database.Datacentre;
 using Shared.Game;
+using Shared.Game.Enum;
 using WorldServer.Network;
 using WorldServer.Network.Message;
 
-namespace WorldServer.Game
+namespace WorldServer.Game.Entity
 {
     public class Player : Actor
     {
         public WorldSession Session { get; }
         public CharacterInfo Character { get; }
-
+        public Inventory Inventory { get; }
+        
         public bool IsLogin { get; set; } = true;
         public bool IsLoading { get; set; } = true;
         
@@ -26,6 +28,7 @@ namespace WorldServer.Game
         {
             Session   = session;
             Character = character;
+            Inventory = new Inventory(this, character.Appearance.Race, character.Appearance.Sex, (ClassJob)character.ClassJobId);
             Position  = character.SpawnPosition;
         }
 
@@ -79,12 +82,18 @@ namespace WorldServer.Game
         {
             if (actor.IsPlayer)
             {
+                Player player = actor.ToPlayer;
+                
+                (ulong MainHand, ulong OffHand) weaponDisplayId = player.Inventory.GetWeaponDisplayIds();
                 Session.Send(actor.Id, Id,
                     new ServerPlayerSpawn
                     {
-                        SpawnIndex = GetSpawnIndex(actor.Id),
-                        Position   = Position,
-                        Character  = actor.ToPlayer.Character
+                        SpawnIndex            = GetSpawnIndex(actor.Id),
+                        Position              = Position,
+                        Character             = player.Character,
+                        MainHandDisplayId     = weaponDisplayId.MainHand,
+                        OffHandDisplayId      = weaponDisplayId.OffHand,
+                        VisibleItemDisplayIds = player.Inventory.GetVisibleItemDisplayIds()
                     });
             }
             else
@@ -138,6 +147,8 @@ namespace WorldServer.Game
                 WeatherId     = 1,
                 WorldPosition = Position
             });
+            
+            Inventory.Send();
         }
 
         public override void OnRemoveFromMap()

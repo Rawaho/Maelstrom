@@ -1,5 +1,6 @@
 ﻿using Shared.Network;
 using WorldServer.Game;
+using WorldServer.Game.Entity;
 
 namespace WorldServer.Network
 {

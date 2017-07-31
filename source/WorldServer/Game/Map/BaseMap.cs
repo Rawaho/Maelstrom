@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Numerics;
 using Shared;
 using Shared.Game;
+using WorldServer.Game.Entity;
 
 namespace WorldServer.Game.Map
 {

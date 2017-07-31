@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Shared;
+using WorldServer.Game.Entity;
 
 namespace WorldServer.Game.Map
 {

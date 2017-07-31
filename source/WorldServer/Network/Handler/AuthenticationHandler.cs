@@ -4,7 +4,7 @@ using System.Linq;
 using Shared.Database;
 using Shared.Database.Datacentre;
 using Shared.Network;
-using WorldServer.Game;
+using WorldServer.Game.Entity;
 using WorldServer.Network.Message;
 
 namespace WorldServer.Network.Handler

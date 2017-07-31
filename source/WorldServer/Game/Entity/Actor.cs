@@ -6,7 +6,7 @@ using Shared.Network;
 using WorldServer.Game.Map;
 using WorldServer.Network.Message;
 
-namespace WorldServer.Game
+namespace WorldServer.Game.Entity
 {
     public abstract class Actor
     {

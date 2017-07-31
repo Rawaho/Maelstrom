@@ -89,6 +89,7 @@
     <Compile Include="Game\Enum\ClassJob.cs" />
     <Compile Include="Game\Enum\Expansion.cs" />
     <Compile Include="Game\Enum\Race.cs" />
+    <Compile Include="Game\Enum\Sex.cs" />
     <Compile Include="Game\QueuedCounter.cs" />
     <Compile Include="Game\SecurityLevel.cs" />
     <Compile Include="Game\WorldPosition.cs" />
@@ -125,7 +126,9 @@
     <Compile Include="SqPack\Exh.cs" />
     <Compile Include="SqPack\GameTableManager.cs" />
     <Compile Include="SqPack\GameTable\ClassJobEntry.cs" />
+    <Compile Include="SqPack\GameTable\EquipSlotCategoryEntry.cs" />
     <Compile Include="SqPack\GameTable\ItemEntry.cs" />
+    <Compile Include="SqPack\GameTable\ItemUiCategoryEntry.cs" />
     <Compile Include="SqPack\GameTable\PlaceNameEntry.cs" />
     <Compile Include="SqPack\GameTable\RaceEntry.cs" />
     <Compile Include="SqPack\GameTable\TerritoryTypeEntry.cs" />

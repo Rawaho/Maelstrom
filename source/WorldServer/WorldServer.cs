@@ -27,7 +27,7 @@ namespace WorldServer
             PacketManager.Initialise();
             ActorActionManager.Initalise();
             GmCommandManager.Initalise();
-            // AssetManager
+            AssetManager.Initialise();
             MapManager.Initialise();
             NetworkManager.Initialise(ConfigManager.Config.Server.WorldPort);
             UpdateManager.Initialise();

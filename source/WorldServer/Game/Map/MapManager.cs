@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Shared.SqPack;
 using Shared.SqPack.GameTable;
+using WorldServer.Game.Entity;
 
 namespace WorldServer.Game.Map
 {

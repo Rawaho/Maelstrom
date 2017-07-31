@@ -7,6 +7,8 @@ namespace Shared.SqPack
 {
     public class ExdTable<T> where T : Exd.Entry, new()
     {
+        public int Count => entries.FirstOrDefault().Value.Count;
+        
         private readonly Dictionary<ExdLanguage, Dictionary<uint, T>> entries = new Dictionary<ExdLanguage, Dictionary<uint, T>>();
 
         public ExdTable(Exh header)
