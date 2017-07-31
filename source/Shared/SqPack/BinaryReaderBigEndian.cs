@@ -44,6 +44,13 @@ namespace Shared.SqPack
             return BitConverter.ToUInt32(data, 0);
         }
 
+        public ulong ReadUInt64Be()
+        {
+            byte[] data = ReadBytes(8);
+            Array.Reverse(data);
+            return BitConverter.ToUInt64(data, 0);
+        }
+
         public string ReadExdString()
         {
             var sb = new StringBuilder();

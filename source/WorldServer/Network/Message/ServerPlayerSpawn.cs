@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Shared.Database.Datacentre;
 using Shared.Game;
 using Shared.Network;
@@ -11,6 +12,10 @@ namespace WorldServer.Network.Message
         public byte SpawnIndex;
         public WorldPosition Position;
         public CharacterInfo Character;
+
+        public ulong MainHandDisplayId;
+        public ulong OffHandDisplayId;
+        public IEnumerable<uint> VisibleItemDisplayIds;
 
         public override void Write(BinaryWriter writer)
         {
@@ -30,8 +35,8 @@ namespace WorldServer.Network.Message
             writer.Write(0u);
 
             // models
-            writer.Write(0ul);          // mainhand
-            writer.Write(0ul);          // offhand
+            writer.Write(MainHandDisplayId);
+            writer.Write(OffHandDisplayId);
             writer.Write(0ul);          // crafting
 
             writer.Write(0u);
@@ -88,10 +93,9 @@ namespace WorldServer.Network.Message
             writer.Write(Position.Offset.X);
             writer.Write(Position.Offset.Y);
             writer.Write(Position.Offset.Z);
-
-            // equipped gear models
-            for (uint i = 0u; i < 10; i++)
-                writer.Write(0u);
+            
+            foreach (uint displayId in VisibleItemDisplayIds)
+                writer.Write(displayId);
 
             writer.WriteStringLength(Character.Name, 0x20u);
             writer.Write(Character.Appearance.Data);

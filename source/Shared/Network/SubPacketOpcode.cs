@@ -16,7 +16,8 @@
         ClientGmCommandInt             = 0x010C,
         ClientGmCommandString          = 0x010D,
         ClientPlayerMove               = 0x010F,
-        
+        ClientInventoryAction          = 0x0116,
+
         // server->client
         ServerError                    = 0x0002,
         ServerServiceAccountList       = 0x000C,
@@ -32,6 +33,12 @@
         ServerPlayerSetup              = 0x011E,
         ServerPlayerStateFlags         = 0x0121,
         ServerClassSetup               = 0x0123,
+        ServerActorAppearanceUpdate    = 0x0124,
+        ServerItemSetup                = 0x0139,
+        ServerContainerSetup           = 0x013A,
+        ServerInventoryUpdateFinish    = 0x013B,
+        ServerInventoryUpdate          = 0x013C,
+        ServerItemUpdate               = 0x0140,
         // all 3 invoke the same client function just with different parameters
         ServerActorAction1             = 0x0142,
         ServerActorAction2             = 0x0143,

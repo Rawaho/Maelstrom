@@ -2,21 +2,22 @@
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Shared.Game.Enum;
 
 namespace Shared.Database.Datacentre
 {
     public struct CharacterAppearanceInfo
     {
-        public byte Race
+        public Race Race
         {
-            get => Data[0];
-            private set => Data[0] = value;
+            get => (Race)Data[0];
+            private set => Data[0] = (byte)value;
         }
 
-        public byte Sex
+        public Sex Sex
         {
-            get => Data[1];
-            private set => Data[1] = value;
+            get => (Sex)Data[1];
+            private set => Data[1] = (byte)value;
         }
 
         public byte Height
@@ -162,8 +163,8 @@ namespace Shared.Database.Datacentre
         public CharacterAppearanceInfo(DataRow row)
         {
             Data            = new byte[26];
-            Race            = row.Read<byte>("race");
-            Sex             = row.Read<byte>("sex");
+            Race            = row.Read<Race>("race");
+            Sex             = row.Read<Sex>("sex");
             Height          = row.Read<byte>("height");
             Clan            = row.Read<byte>("clan");
             Face            = row.Read<byte>("face");

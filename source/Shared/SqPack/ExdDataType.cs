@@ -11,6 +11,6 @@
         Int    = 6,
         UInt   = 7,
         Float  = 9,
-        Packed = 11
+        ULong  = 11
     }
 }

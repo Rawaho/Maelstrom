@@ -1,4 +1,5 @@
 ﻿using Shared.Game;
+using WorldServer.Game.Entity;
 
 namespace WorldServer.Game.Map
 {

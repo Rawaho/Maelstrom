@@ -20,9 +20,9 @@ namespace WorldServer.Network.Message
             writer.Write((ushort)0);
             writer.Write((byte)0);
             writer.Write((byte)0);
-            writer.Write(Character.Appearance.Race);
+            writer.Write((byte)Character.Appearance.Race);
             writer.Write(Character.Appearance.Clan);
-            writer.Write(Character.Appearance.Sex);
+            writer.Write((byte)Character.Appearance.Sex);
             writer.Write(Character.ClassJobId);
             writer.Write(Character.ClassId);
             writer.Write(Character.Guardian);

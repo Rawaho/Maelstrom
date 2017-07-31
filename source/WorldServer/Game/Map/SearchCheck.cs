@@ -1,4 +1,6 @@
-﻿namespace WorldServer.Game.Map
+﻿using WorldServer.Game.Entity;
+
+namespace WorldServer.Game.Map
 {
     public abstract class SearchCheck
     {

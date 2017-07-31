@@ -97,9 +97,8 @@ namespace Shared.SqPack
                                     case ExdDataType.UInt:
                                         entry.Data[i] = reader.ReadUInt32Be();
                                         break;
-                                    case ExdDataType.Packed:
-                                        reader.ReadUInt32Be();
-                                        reader.ReadUInt32Be();
+                                    case ExdDataType.ULong:
+                                        entry.Data[i] = reader.ReadUInt64Be();
                                         break;
                                     default:
                                         Debug.Assert(false, $"Unhandled EXD data type {header.Columns[i].Type}");
