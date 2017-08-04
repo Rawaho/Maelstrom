@@ -11,6 +11,8 @@ namespace Shared.SqPack
             public uint Index;
             public uint Offset;
             public object[] Data;
+
+            public virtual void Initialise() { }
         }
 
         public Entry[] Entries { get; private set; }
@@ -116,6 +118,8 @@ namespace Shared.SqPack
                             reader.BaseStream.Position = stringTable + (uint)entry.Data[i];
                             entry.Data[i] = reader.ReadExdString();
                         }
+
+                        entry.Initialise();
                     }
                 }
             }

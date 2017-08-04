@@ -45,9 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\AchievementHandler.cs" />
     <Compile Include="Command\ActorHandler.cs" />
     <Compile Include="Command\LookupHandler.cs" />
     <Compile Include="Command\MiscHandler.cs" />
+    <Compile Include="Game\Achievement\Achievement.cs" />
+    <Compile Include="Game\Achievement\Criteria.cs" />
+    <Compile Include="Game\Achievement\CriteriaAction.cs" />
+    <Compile Include="Game\Achievement\CriteriaAdditionalRequirement.cs" />
+    <Compile Include="Game\Achievement\CriteriaAdditionalRequirementAttribute.cs" />
+    <Compile Include="Game\Achievement\CriteriaAttribute.cs" />
+    <Compile Include="Game\Achievement\CriteriaCounterType.cs" />
+    <Compile Include="Game\Achievement\CriteriaType.cs" />
+    <Compile Include="Game\Achievement\AchievementManager.cs" />
     <Compile Include="Game\Entity\Actor.cs" />
     <Compile Include="Game\ActorType.cs" />
     <Compile Include="Game\Entity\ContainerEquippedSlot.cs" />
@@ -58,6 +68,7 @@
     <Compile Include="Game\Entity\Item.cs" />
     <Compile Include="Game\Entity\Container.cs" />
     <Compile Include="Game\Entity\ItemUiCategory.cs" />
+    <Compile Include="Game\FixedQueue.cs" />
     <Compile Include="Game\Map\BaseMap.cs" />
     <Compile Include="Game\Map\SearchCheck.cs" />
     <Compile Include="Game\Map\SearchCheckRange.cs" />
@@ -88,6 +99,7 @@
     <Compile Include="Network\Handler\GmCommandHandler.cs" />
     <Compile Include="Network\Handler\ItemHandler.cs" />
     <Compile Include="Network\Handler\MiscHandler.cs" />
+    <Compile Include="Network\Message\ServerAchievementList.cs" />
     <Compile Include="Network\Message\ServerContentFinderMemberStatus.cs" />
     <Compile Include="Network\Message\ServerContentFinderRegister.cs" />
     <Compile Include="Network\Message\ServerContentFinderNotify.cs" />

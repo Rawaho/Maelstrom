@@ -49,6 +49,7 @@
         ServerQuestJournalActiveList   = 0x0171,
         ServerQuestJournalCompleteList = 0x0173,
         ServerTerritorySetup           = 0x019A,
+        ServerAchievementList          = 0x01CB,
         ServerTerritoryPending         = 0x0239,
 
         ServerUnknown01FB              = 0x01FB,

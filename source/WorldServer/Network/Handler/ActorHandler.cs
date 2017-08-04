@@ -46,5 +46,17 @@ namespace WorldServer.Network.Handler
             session.Player.IsLoading = false;
             session.Player.IsLogin   = false;
         }
+
+        [ActorActionHandler(ActorAction.AchievementCriteriaRequest)]
+        public static void HandleActorActionAchievementCriteriaRequest(WorldSession session, ClientActorAction actorAction)
+        {
+            session.Player.Achievement.SendAchievementCriteria(actorAction.Parameters[0]);
+        }
+
+        [ActorActionHandler(ActorAction.AchievementList)]
+        public static void HandleActorActionAchievementList(WorldSession session, ClientActorAction actorAction)
+        {
+            session.Player.Achievement.SendAchievementList();
+        }
     }
 }

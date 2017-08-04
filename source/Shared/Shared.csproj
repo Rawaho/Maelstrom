@@ -125,6 +125,7 @@
     <Compile Include="SqPack\ExdTable.cs" />
     <Compile Include="SqPack\Exh.cs" />
     <Compile Include="SqPack\GameTableManager.cs" />
+    <Compile Include="SqPack\GameTable\AchievementEntry.cs" />
     <Compile Include="SqPack\GameTable\ClassJobEntry.cs" />
     <Compile Include="SqPack\GameTable\EquipSlotCategoryEntry.cs" />
     <Compile Include="SqPack\GameTable\ItemEntry.cs" />

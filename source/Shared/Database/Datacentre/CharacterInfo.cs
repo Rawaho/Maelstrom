@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -119,6 +120,14 @@ namespace Shared.Database.Datacentre
         {
             var classInfo = new CharacterClassInfo(row);
             classes[classInfo.Id] = classInfo;
+        }
+
+        public CharacterClassInfo GetClassInfo(uint classJobId)
+        {
+            if (!GameTableManager.ClassJobs.TryGetValue(classJobId, ExdLanguage.En, out ClassJobEntry classJobTemplate))
+                throw new ArgumentException($"Invalid ClassJobId: {classJobId}!");
+
+            return classes[classJobTemplate.ClassId];
         }
 
         public bool Verify()

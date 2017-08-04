@@ -32,5 +32,12 @@ namespace Shared
             while (queue.Count > 0)
                 queue.TryDequeue(out T value);
         }
+
+        public static T[] RangeSubset<T>(this T[] array, int startIndex, int length)
+        {
+            var subset = new T[length];
+            Array.Copy(array, startIndex, subset, 0, length);
+            return subset;
+        }
     }
 }

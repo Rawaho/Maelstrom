@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Shared.Database.Datacentre;
 using Shared.Game;
 using Shared.Game.Enum;
+using WorldServer.Game.Achievement;
 using WorldServer.Network;
 using WorldServer.Network.Message;
 
@@ -14,7 +15,8 @@ namespace WorldServer.Game.Entity
         public WorldSession Session { get; }
         public CharacterInfo Character { get; }
         public Inventory Inventory { get; }
-        
+        public AchievementManager Achievement { get; }
+
         public bool IsLogin { get; set; } = true;
         public bool IsLoading { get; set; } = true;
         
@@ -26,10 +28,11 @@ namespace WorldServer.Game.Entity
         public Player(WorldSession session, CharacterInfo character)
             : base(character.ActorId, ActorType.Player)
         {
-            Session   = session;
-            Character = character;
-            Inventory = new Inventory(this, character.Appearance.Race, character.Appearance.Sex, (ClassJob)character.ClassJobId);
-            Position  = character.SpawnPosition;
+            Session     = session;
+            Character   = character;
+            Inventory   = new Inventory(this, character.Appearance.Race, character.Appearance.Sex, (ClassJob)character.ClassJobId);
+            Achievement = new AchievementManager(this);
+            Position    = character.SpawnPosition;
         }
 
         public override void AddVisibleActor(Actor actor)
@@ -105,7 +108,9 @@ namespace WorldServer.Game.Entity
         public void OnLogin()
         {
             Debug.Assert(IsLogin);
-            
+
+            Achievement.CheckAchievements();
+
             Session.Send(new ServerPlayerSetup
             {
                 Character = Character
