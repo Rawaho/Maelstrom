@@ -87,6 +87,7 @@
     <Compile Include="Database\World\WorldDatabase.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Game\Enum\ClassJob.cs" />
+    <Compile Include="Game\Enum\ClassJobRole.cs" />
     <Compile Include="Game\Enum\Expansion.cs" />
     <Compile Include="Game\Enum\Race.cs" />
     <Compile Include="Game\Enum\Sex.cs" />

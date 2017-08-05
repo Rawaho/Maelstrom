@@ -14,12 +14,12 @@ namespace WorldServer.Network.Message {
 
         public override void Write(BinaryWriter writer)
         {
-            writer.Write(this.ContentId);
+            writer.Write(ContentId);
             writer.Pad(2);
-            writer.Write(this.Status);
-            writer.Write(this.CurrentTank);
-            writer.Write(this.CurrentDPS);
-            writer.Write(this.CurrentHealer);
+            writer.Write(Status);
+            writer.Write(CurrentTank);
+            writer.Write(CurrentDPS);
+            writer.Write(CurrentHealer);
             writer.Write(1); // unknown
             writer.Pad(3); // unknown
             writer.Pad(4); // unknown

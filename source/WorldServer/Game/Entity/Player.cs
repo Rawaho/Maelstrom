@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Shared.Database.Datacentre;
@@ -111,6 +112,11 @@ namespace WorldServer.Game.Entity
 
             Achievement.CheckAchievements();
 
+            Session.Send(new ServerContentFinderList {
+                // Unlock all contents for now
+                Contents = new BitArray(0x48 * 8, true)
+            });
+            
             Session.Send(new ServerPlayerSetup
             {
                 Character = Character
