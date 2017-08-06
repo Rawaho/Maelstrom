@@ -12,6 +12,7 @@
         ClientCharacterCreate          = 0x000B,
         ClientTerritoryFinalise        = 0x0069,
         ClientLogout                   = 0x0074,
+        ClientContentFinderRequestInfo = 0x0078,
         ClientActorAction              = 0x0108,
         ClientGmCommandInt             = 0x010C,
         ClientGmCommandString          = 0x010D,
@@ -27,9 +28,13 @@
         ServerRealmList                = 0x0015,
         ServerRetainerList             = 0x0017,
         ServerLogout                   = 0x0077,
+        
         ServerContentFinderNotify       = 0x0078,
         ServerContentFinderMemberStatus = 0x0079,
+        ServerContentFinderPlayerInNeed = 0x007F,
+        ServerContentFinderDutyInfo     = 0x007A,
         ServerContentFinderRegister     = 0x00B0,
+        
         ServerMessage                  = 0x00BC,
         ServerPlayerSpawn              = 0x0110,
         ServerActorMove                = 0x0112,
@@ -50,6 +55,9 @@
         ServerQuestJournalCompleteList = 0x0173,
         ServerTerritorySetup           = 0x019A,
         ServerAchievementList          = 0x01CB,
+        
+        ServerContentFinderList        = 0x01CF,
+        
         ServerTerritoryPending         = 0x0239,
 
         ServerUnknown01FB              = 0x01FB,
@@ -58,7 +66,5 @@
         // bidirectional
         NewWorld                       = 0x0066,
         Chat                           = 0x0067,
-
-        
     }
 }
