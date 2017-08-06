@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,6 +27,12 @@ namespace Shared.Database.Datacentre
 
     public class CharacterInfo
     {
+        // forename and surname together can't total more than 20 (21 including space) characters
+        // forename and surname separately must be between 2 and 15 characters
+        // only the first character should be uppercase
+        // hyphens and apostrophes can't be used in succession or placed immediatley before or after the other
+        private static readonly Regex nameRegex = new Regex(@"^(?=.{5,21})^(?=.{2,15}\s.{2,15})^(?!.*?[-']{2})^(?:[A-Z][-'a-z]+)\s(?:[A-Z][-'a-z]+)$");
+
         public uint AccountId { get; }
         public ulong Id { get; private set; }
         public uint ActorId { get; private set; }
@@ -144,48 +151,7 @@ namespace Shared.Database.Datacentre
 
         public static bool VerifyName(string name)
         {
-            string[] nameExplode = name.Split(' ');
-            if (nameExplode.Length != 2)
-                return false;
-
-            // forename and surname together can't total more than 20 characters
-            if (nameExplode[0].Length + nameExplode[1].Length > 20)
-                return false;
-
-            bool IsAcceptedSymbol(char c) => c == '-' || c == '\'';
-            for (int i = 0; i < 2; i++)
-            {
-                // forename and surname separately must be between 2 and 15 characters
-                if (nameExplode[i].Length < 2 || nameExplode[i].Length > 15)
-                    return false;
-
-                for (int j = 0; j < nameExplode[i].Length; j++)
-                {
-                    char c = nameExplode[i][j];
-                    if (!char.IsLower(c) && !char.IsUpper(c) && !IsAcceptedSymbol(c))
-                        return false;
-
-                    // only the first character should be uppercase
-                    if (char.IsUpper(c))
-                    {
-                        if (j == 0)
-                            continue;
-                        return false;
-                    }
-
-                    if (IsAcceptedSymbol(c))
-                    {
-                        char pc = nameExplode[i][j - 1];
-                        // hyphens can't be used in succession or placed immediatley before or after apostrophes
-                        if (c == '-' && (pc == '\'' || pc == '-'))
-                            return false;
-                        if (c == '\'' && pc == '-')
-                            return false;
-                    }
-                }
-            }
-
-            return true;
+            return nameRegex.IsMatch(name);
         }
 
         public async Task SaveToDatabase()
