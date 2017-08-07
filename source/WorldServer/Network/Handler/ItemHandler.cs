@@ -7,7 +7,7 @@ namespace WorldServer.Network.Handler
 {
     public static class ItemHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientInventoryAction)]
+        [SubPacketHandler(SubPacketOpcode.ClientInventoryAction, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleClientInventoryAction(WorldSession session, ClientInventoryAction inventoryAction)
         {
             try

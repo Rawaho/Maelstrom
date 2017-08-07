@@ -7,7 +7,7 @@ namespace WorldServer.Network.Handler
 {
     public static class ContentFinderHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientContentFinderRequestInfo)]
+        [SubPacketHandler(SubPacketOpcode.ClientContentFinderRequestInfo, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleChat(WorldSession session, ClientContentFinderRequestInfo info)
         {
             #if DEBUG

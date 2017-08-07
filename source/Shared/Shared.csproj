@@ -134,6 +134,7 @@
     <Compile Include="SqPack\GameTable\PlaceNameEntry.cs" />
     <Compile Include="SqPack\GameTable\RaceEntry.cs" />
     <Compile Include="SqPack\GameTable\TerritoryTypeEntry.cs" />
+    <Compile Include="Network\SubPacketHandlerFlags.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

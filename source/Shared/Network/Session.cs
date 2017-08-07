@@ -111,11 +111,17 @@ namespace Shared.Network
             }
         }
 
+        protected virtual bool CanProcessSubPacket(SubPacket subPacket)
+        {
+            return true;
+        }
+
         public virtual void Update(double lastTick)
         {
             foreach (Packet packet in incomingPackets.DequeueMultiple(MaxIncomingPacketsPerUpdate))
                 foreach (SubPacket subPacket in packet.SubPackets)
-                    PacketManager.InvokeHandler(this, subPacket);
+                    if (CanProcessSubPacket(subPacket))
+                        PacketManager.InvokeHandler(this, subPacket);
 
             (ConnectionHeartbeatResult result, uint pulseTime) = Heartbeat.Update(lastTick);
             switch (result)

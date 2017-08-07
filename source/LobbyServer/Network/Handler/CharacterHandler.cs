@@ -14,7 +14,7 @@ namespace LobbyServer.Network.Handler
 {
     public class CharacterHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientCharacterList)]
+        [SubPacketHandler(SubPacketOpcode.ClientCharacterList, SubPacketHandlerFlags.RequiresEncryption)]
         public static void HandleClientSessionRequest(LobbySession session, ClientCharacterList characterList)
         {
             session.Sequence = characterList.Sequence;
@@ -120,7 +120,7 @@ namespace LobbyServer.Network.Handler
             }
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientCharacterCreate)]
+        [SubPacketHandler(SubPacketOpcode.ClientCharacterCreate, SubPacketHandlerFlags.RequiresEncryption | SubPacketHandlerFlags.RequiresAccount)]
         public static async void HandleCharacterCreate(LobbySession session, ClientCharacterCreate characterCreate)
         {
             session.Sequence = characterCreate.Sequence;
@@ -222,13 +222,13 @@ namespace LobbyServer.Network.Handler
             }
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientCharacterDelete)]
+        [SubPacketHandler(SubPacketOpcode.ClientCharacterDelete, SubPacketHandlerFlags.RequiresEncryption | SubPacketHandlerFlags.RequiresAccount)]
         public static void HandleCharacterDelete(LobbySession session, SubPacket subPacket)
         {
             // TODO
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientEnterWorld)]
+        [SubPacketHandler(SubPacketOpcode.ClientEnterWorld, SubPacketHandlerFlags.RequiresEncryption | SubPacketHandlerFlags.RequiresAccount)]
         public static async void HandleClientEnterWorld(LobbySession session, ClientEnterWorld enterWorld)
         {
             session.Sequence = enterWorld.Sequence;

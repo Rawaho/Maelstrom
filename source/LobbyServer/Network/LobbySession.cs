@@ -31,6 +31,31 @@ namespace LobbyServer.Network
             #endif
         }
 
+        protected override bool CanProcessSubPacket(SubPacket subPacket)
+        {
+            SubPacketHandlerAttribute attribute = PacketManager.GetSubPacketHandlerInfo(subPacket);
+            if (attribute == null)
+                return true;
+
+            if ((attribute.Flags & SubPacketHandlerFlags.RequiresEncryption) != 0 && blowfish == null)
+            {
+                #if DEBUG
+                    Console.WriteLine($"Rejecting packet ({subPacket.SubHeader.Type}, {subPacket.SubMessageHeader.Opcode}), lobby session ({Remote}) doesn't have Blowfish enabled!");
+                #endif
+                return false;
+            }
+
+            if ((attribute.Flags & SubPacketHandlerFlags.RequiresAccount) != 0 && ServiceAccount.Id == 0)
+            {
+                #if DEBUG
+                    Console.WriteLine($"Rejecting packet ({subPacket.SubHeader.Type}, {subPacket.SubMessageHeader.Opcode}), lobby session ({Remote}) doesn't have assigned service account!");
+                #endif
+                return false;
+            }
+
+            return true;
+        }
+
         public override void Send(SubPacket subPacket)
         {
             uint sessionHash = SessionHash != 0u ? SessionHash : 0u;

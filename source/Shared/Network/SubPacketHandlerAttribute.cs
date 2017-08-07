@@ -7,15 +7,18 @@ namespace Shared.Network
     {
         public SubPacketOpcode Opcode { get; }
         public SubPacketType Type { get; }
+        public SubPacketHandlerFlags Flags { get; }
 
-        public SubPacketHandlerAttribute(SubPacketOpcode opcode)
+        public SubPacketHandlerAttribute(SubPacketOpcode opcode, SubPacketHandlerFlags flags = SubPacketHandlerFlags.None)
         {
             Opcode = opcode;
+            Flags  = flags;
         }
 
-        public SubPacketHandlerAttribute(SubPacketType type)
+        public SubPacketHandlerAttribute(SubPacketType type, SubPacketHandlerFlags flags = SubPacketHandlerFlags.None)
         {
             Type  = type;
+            Flags = flags;
         }
     }
 }

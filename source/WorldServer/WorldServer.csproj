@@ -93,6 +93,7 @@
     <Compile Include="Network\GmCommandManager.cs" />
     <Compile Include="Network\GmCommandParameters.cs" />
     <Compile Include="Network\ContentFinderLanguage.cs" />
+    <Compile Include="Network\Handler\ActorActionHandler.cs" />
     <Compile Include="Network\Handler\ActorHandler.cs" />
     <Compile Include="Network\Handler\AuthenticationHandler.cs" />
     <Compile Include="Network\Handler\ChatHandler.cs" />
