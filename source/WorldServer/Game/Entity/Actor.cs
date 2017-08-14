@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using Shared.Game;
 using Shared.Network;
+using WorldServer.Game.Entity.Enums;
 using WorldServer.Game.Map;
 using WorldServer.Network.Message;
 
@@ -20,6 +21,8 @@ namespace WorldServer.Game.Entity
         public bool IsPlayer => Type == ActorType.Player;
         public bool IsNpc => Type == ActorType.Npc;
         public Player ToPlayer => IsPlayer ? (Player)this : null;
+
+        public uint PhaseId { get; private set; }
 
         protected readonly HashSet<Actor> visibleActors = new HashSet<Actor>();
 
@@ -67,10 +70,24 @@ namespace WorldServer.Game.Entity
 
             SendMessageToVisible(new ServerActorMove
             {
-                Position = new WorldPosition(Map.Id, Position.Offset, Position.Orientation),
+                Position = new WorldPosition((ushort)Map.Entry.Index, Position.Offset, Position.Orientation),
             });
         }
 
+        private bool CanSeeActor(Actor other)
+        {
+            if (PhaseId != other.PhaseId)
+                return false;
+
+            if (other.IsPlayer && (other.ToPlayer.FlagsCu & PlayerFlagsCu.Invisible) != 0)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Update all visible actors in vision range.
+        /// </summary>
         public void UpdateVision()
         {
             List<Actor> intersectedActors;
@@ -106,9 +123,13 @@ namespace WorldServer.Game.Entity
             visibleActors.Clear();
         }
 
-        public virtual void AddVisibleActor(Actor actor)
+        public virtual bool AddVisibleActor(Actor actor)
         {
+            if (!CanSeeActor(actor))
+                return false;
+
             visibleActors.Add(actor);
+            return true;
         }
 
         public virtual void RemoveVisibleActor(Actor actor)
@@ -120,6 +141,16 @@ namespace WorldServer.Game.Entity
         {
             foreach (Actor actor in visibleActors.Where(a => a.IsPlayer))
                 actor.ToPlayer.Session.Send(Id, actor.Id, subPacket);
+        }
+
+        /// <summary>
+        /// Set actor phase, actor can only see and interact with other actors in the same phase.
+        /// </summary>
+        public void SetPhase(uint phaseId)
+        {
+            PhaseId = phaseId;
+            if (InWorld)
+                UpdateVision();
         }
     }
 }

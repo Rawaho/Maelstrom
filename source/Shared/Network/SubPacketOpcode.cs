@@ -19,6 +19,13 @@
         ClientPlayerMove               = 0x010F,
         ClientInventoryAction          = 0x0116,
 
+        ClientEventGossip              = 0x011F,
+        ClientEventEmote               = 0x0120,
+        ClientEventAreaTrigger         = 0x0121,
+        ClientEventOutOfBounds         = 0x0122,
+        ClientEventTerritory           = 0x0123,
+        ClientEventSceneFinish         = 0x0128,
+
         // server->client
         ServerError                    = 0x0002,
         ServerServiceAccountList       = 0x000C,
@@ -51,6 +58,19 @@
         ServerActorAction1             = 0x0142,
         ServerActorAction2             = 0x0143,
         ServerActorAction3             = 0x0144,
+
+        ServerEventSceneStart          = 0x0154,
+        /* also call the same client function as ServerEventSceneStart
+        0x0155,
+        0x0156,
+        0x0157,
+        0x0158,
+        0x0159,
+        0x015A,
+        0x015B,*/
+        ServerEventStart               = 0x015D,
+        ServerEventStop                = 0x015E,
+
         ServerQuestJournalActiveList   = 0x0171,
         ServerQuestJournalCompleteList = 0x0173,
         ServerTerritorySetup           = 0x019A,

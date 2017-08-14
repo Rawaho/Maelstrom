@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Shared.Game;
+using WorldServer.Game.Entity.Enums;
 using WorldServer.Network.Message;
 
 namespace WorldServer.Game.Entity

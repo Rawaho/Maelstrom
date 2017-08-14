@@ -26,7 +26,7 @@ namespace WorldServer.Network.Handler
         [SubPacketHandler(SubPacketOpcode.ClientPlayerMove, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleClientPlayerMove(WorldSession session, ClientPlayerMove actorMove)
         {
-            var newPosition = new WorldPosition(session.Player.Map.Id, actorMove.Position, actorMove.Orientation);
+            var newPosition = new WorldPosition((ushort)session.Player.Map.Entry.Index, actorMove.Position, actorMove.Orientation);
             session.Player.Relocate(newPosition);
         }
     }

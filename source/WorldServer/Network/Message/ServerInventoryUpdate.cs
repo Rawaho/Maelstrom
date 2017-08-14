@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Shared.Network;
 using WorldServer.Game.Entity;
+using WorldServer.Game.Entity.Enums;
 
 namespace WorldServer.Network.Message
 {

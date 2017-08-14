@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -131,7 +131,9 @@
     <Compile Include="SqPack\GameTable\EquipSlotCategoryEntry.cs" />
     <Compile Include="SqPack\GameTable\ItemEntry.cs" />
     <Compile Include="SqPack\GameTable\ItemUiCategoryEntry.cs" />
+    <Compile Include="SqPack\GameTable\OpeningEntry.cs" />
     <Compile Include="SqPack\GameTable\PlaceNameEntry.cs" />
+    <Compile Include="SqPack\GameTable\QuestEntry.cs" />
     <Compile Include="SqPack\GameTable\RaceEntry.cs" />
     <Compile Include="SqPack\GameTable\TerritoryTypeEntry.cs" />
     <Compile Include="Network\SubPacketHandlerFlags.cs" />

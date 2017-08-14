@@ -6,6 +6,8 @@ using Shared.Database.Datacentre;
 using Shared.Game;
 using Shared.Game.Enum;
 using WorldServer.Game.Achievement;
+using WorldServer.Game.Entity.Enums;
+using WorldServer.Game.Event;
 using WorldServer.Network;
 using WorldServer.Network.Message;
 
@@ -16,8 +18,10 @@ namespace WorldServer.Game.Entity
         public WorldSession Session { get; }
         public CharacterInfo Character { get; }
         public Inventory Inventory { get; }
+        public EventManager Event { get; }
         public AchievementManager Achievement { get; }
 
+        public PlayerFlagsCu FlagsCu { get; private set; } = PlayerFlagsCu.FirstLogin;
         public bool IsLogin { get; set; } = true;
         public bool IsLoading { get; set; } = true;
         
@@ -32,19 +36,21 @@ namespace WorldServer.Game.Entity
             Session     = session;
             Character   = character;
             Inventory   = new Inventory(this, character.Appearance.Race, character.Appearance.Sex, (ClassJob)character.ClassJobId);
+            Event       = new EventManager(this);
             Achievement = new AchievementManager(this);
             Position    = character.SpawnPosition;
         }
 
-        public override void AddVisibleActor(Actor actor)
+        public override bool AddVisibleActor(Actor actor)
         {
-            base.AddVisibleActor(actor);
+            if (!base.AddVisibleActor(actor))
+                return false;
 
             // inital territory spawns are sent in bulk from packet handler after territory loading
-            if (IsLoading)
-                return;
+            if (!IsLoading)
+                SendActor(actor);
 
-            SendActor(actor);
+            return true;
         }
 
         public override void RemoveVisibleActor(Actor actor)
@@ -145,6 +151,10 @@ namespace WorldServer.Game.Entity
 
         public override void OnAddToMap()
         {
+            // opening maps are unique phased
+            if (Map.Entry.Type == 6)
+                SetPhase(Character.ActorId);
+
             base.OnAddToMap();
             pendingTeleportPosition = null;
 
@@ -158,7 +168,7 @@ namespace WorldServer.Game.Entity
                 WeatherId     = 1,
                 WorldPosition = Position
             });
-            
+
             Inventory.Send();
         }
 
@@ -168,6 +178,10 @@ namespace WorldServer.Game.Entity
 
             if (pendingTeleportPosition != null)
             {
+                // remove phasing when leaving an opening map
+                if (Map.Entry.Type == 6)
+                    SetPhase(0u);
+
                 Position  = pendingTeleportPosition;
                 IsLoading = true;
                 AddToMap();

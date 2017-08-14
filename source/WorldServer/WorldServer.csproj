@@ -60,14 +60,22 @@
     <Compile Include="Game\Achievement\AchievementManager.cs" />
     <Compile Include="Game\Entity\Actor.cs" />
     <Compile Include="Game\ActorType.cs" />
-    <Compile Include="Game\Entity\ContainerEquippedSlot.cs" />
-    <Compile Include="Game\Entity\ContainerType.cs" />
+    <Compile Include="Game\Entity\Enums\ContainerEquippedSlot.cs" />
+    <Compile Include="Game\Entity\Enums\ContainerType.cs" />
     <Compile Include="Game\Entity\ContainerTypeAttribute.cs" />
-    <Compile Include="Game\Entity\InventoryAction.cs" />
+    <Compile Include="Game\Entity\Enums\InventoryAction.cs" />
     <Compile Include="Game\Entity\InventoryTransaction.cs" />
     <Compile Include="Game\Entity\Item.cs" />
     <Compile Include="Game\Entity\Container.cs" />
-    <Compile Include="Game\Entity\ItemUiCategory.cs" />
+    <Compile Include="Game\Entity\Enums\ItemUiCategory.cs" />
+    <Compile Include="Game\Event\EventStateException.cs" />
+    <Compile Include="Game\Event\EventHiType.cs" />
+    <Compile Include="Game\Event\EventScriptAttribute.cs" />
+    <Compile Include="Game\Event\Event.cs" />
+    <Compile Include="Game\Event\EventManager.cs" />
+    <Compile Include="Game\Event\SceneFlags.cs" />
+    <Compile Include="Game\Event\EventScript.cs" />
+    <Compile Include="Game\Event\EventType.cs" />
     <Compile Include="Game\FixedQueue.cs" />
     <Compile Include="Game\Map\BaseMap.cs" />
     <Compile Include="Game\Map\SearchCheck.cs" />
@@ -79,6 +87,7 @@
     <Compile Include="Game\Map\Vector2G.cs" />
     <Compile Include="Game\Entity\Player.cs" />
     <Compile Include="Game\Entity\Inventory.cs" />
+    <Compile Include="Game\Entity\Enums\PlayerFlagsCu.cs" />
     <Compile Include="Manager\AssetManager.cs" />
     <Compile Include="Manager\ChatManager.cs" />
     <Compile Include="Manager\ConfigManager.cs" />
@@ -98,10 +107,16 @@
     <Compile Include="Network\Handler\AuthenticationHandler.cs" />
     <Compile Include="Network\Handler\ChatHandler.cs" />
     <Compile Include="Network\Handler\ContentFinderHandler.cs" />
+    <Compile Include="Network\Handler\EventHandler.cs" />
     <Compile Include="Network\Handler\GmCommandHandler.cs" />
     <Compile Include="Network\Handler\ItemHandler.cs" />
     <Compile Include="Network\Handler\MiscHandler.cs" />
     <Compile Include="Network\Message\ClientContentFinderRequestInfo.cs" />
+    <Compile Include="Network\Message\ClientEventAreaTrigger.cs" />
+    <Compile Include="Network\Message\ClientEventEmote.cs" />
+    <Compile Include="Network\Message\ClientEventGossip.cs" />
+    <Compile Include="Network\Message\ClientEventOutOfBounds.cs" />
+    <Compile Include="Network\Message\ClientEventSceneFinish.cs" />
     <Compile Include="Network\Message\ServerAchievementList.cs" />
     <Compile Include="Network\Message\ServerContentFinderDutyInfo.cs" />
     <Compile Include="Network\Message\ServerContentFinderMemberStatus.cs" />
@@ -124,6 +139,10 @@
     <Compile Include="Network\Message\ServerClassSetup.cs" />
     <Compile Include="Network\Message\ServerContainerSetup.cs" />
     <Compile Include="Network\Message\ServerContentFinderList.cs" />
+    <Compile Include="Network\Message\ClientEventTerritory.cs" />
+    <Compile Include="Network\Message\ServerEventStart.cs" />
+    <Compile Include="Network\Message\ServerEventSceneStart.cs" />
+    <Compile Include="Network\Message\ServerEventStop.cs" />
     <Compile Include="Network\Message\ServerInventoryUpdate.cs" />
     <Compile Include="Network\Message\ServerInventoryUpdateFinish.cs" />
     <Compile Include="Network\Message\ServerError.cs" />
@@ -133,6 +152,7 @@
     <Compile Include="Network\Message\ServerLogout.cs" />
     <Compile Include="Network\Message\ServerMessage.cs" />
     <Compile Include="Network\Message\ServerPlayerSetup.cs" />
+    <Compile Include="Network\Message\ServerPlayerStateFlags.cs" />
     <Compile Include="Network\Message\ServerQuestJournalActiveList.cs" />
     <Compile Include="Network\Message\ServerQuestJournalCompleteList.cs" />
     <Compile Include="Network\Message\ServerPlayerSpawn.cs" />
@@ -142,6 +162,10 @@
     <Compile Include="Network\Message\ServerUnknown01FB.cs" />
     <Compile Include="Network\Message\ServerUnknown01FD.cs" />
     <Compile Include="Network\WorldSession.cs" />
+    <Compile Include="Script\ScriptManager.cs" />
+    <Compile Include="Script\Opening\OpeningGridania.cs" />
+    <Compile Include="Script\Opening\OpeningLimsaLominsa.cs" />
+    <Compile Include="Script\Opening\OpeningUldah.cs" />
     <Compile Include="WorldServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -154,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\Spell\" />
+    <Folder Include="Script\Quest\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj">

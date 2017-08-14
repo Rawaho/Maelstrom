@@ -6,6 +6,7 @@ using Shared.SqPack;
 using WorldServer.Game.Map;
 using WorldServer.Manager;
 using WorldServer.Network;
+using WorldServer.Script;
 
 namespace WorldServer
 {
@@ -28,6 +29,7 @@ namespace WorldServer
             ActorActionManager.Initalise();
             GmCommandManager.Initalise();
             AssetManager.Initialise();
+            ScriptManager.Initialise();
             MapManager.Initialise();
             NetworkManager.Initialise(ConfigManager.Config.Server.WorldPort);
             UpdateManager.Initialise();

@@ -5,6 +5,7 @@ using System.Linq;
 using Shared.Game.Enum;
 using Shared.SqPack;
 using Shared.SqPack.GameTable;
+using WorldServer.Game.Entity.Enums;
 using WorldServer.Manager;
 using WorldServer.Network;
 using WorldServer.Network.Message;

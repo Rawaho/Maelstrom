@@ -11,6 +11,8 @@ namespace Shared.SqPack
         public static ExdTable<EquipSlotCategoryEntry> EquipSlotCategories { get; private set; }
         public static ExdTable<ItemEntry> Items { get; private set; }
         public static ExdTable<ItemUiCategoryEntry> ItemUiCategories { get; private set; }
+        public static ExdTable<QuestEntry> Quests { get; private set; }
+        public static ExdTable<OpeningEntry> OpeningEvents { get; private set; }
         public static ExdTable<PlaceNameEntry> PlaceNames { get; private set; }
         public static ExdTable<RaceEntry> Races { get; private set; }
         public static ExdTable<TerritoryTypeEntry> TerritoryTypes { get; private set; }
@@ -33,6 +35,8 @@ namespace Shared.SqPack
             EquipSlotCategories = ExdTable<EquipSlotCategoryEntry>.Load($"{path}equipslotcategory.exh");
             Items               = ExdTable<ItemEntry>.Load($"{path}item.exh");
             ItemUiCategories    = ExdTable<ItemUiCategoryEntry>.Load($"{path}itemuicategory.exh");
+            Quests              = ExdTable<QuestEntry>.Load($"{path}quest.exh");
+            OpeningEvents       = ExdTable<OpeningEntry>.Load($"{path}opening.exh");
             PlaceNames          = ExdTable<PlaceNameEntry>.Load($"{path}placename.exh");
             Races               = ExdTable<RaceEntry>.Load($"{path}race.exh");
             TerritoryTypes      = ExdTable<TerritoryTypeEntry>.Load($"{path}territorytype.exh");

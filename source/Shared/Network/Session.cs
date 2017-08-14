@@ -119,9 +119,22 @@ namespace Shared.Network
         public virtual void Update(double lastTick)
         {
             foreach (Packet packet in incomingPackets.DequeueMultiple(MaxIncomingPacketsPerUpdate))
+            {
                 foreach (SubPacket subPacket in packet.SubPackets)
-                    if (CanProcessSubPacket(subPacket))
+                {
+                    if (!CanProcessSubPacket(subPacket))
+                        continue;
+
+                    try
+                    {
                         PacketManager.InvokeHandler(this, subPacket);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
+                }
+            }
 
             (ConnectionHeartbeatResult result, uint pulseTime) = Heartbeat.Update(lastTick);
             switch (result)

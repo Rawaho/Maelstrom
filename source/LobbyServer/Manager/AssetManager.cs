@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Numerics;
 using Shared.Database;
 using Shared.Database.Authentication;
 using Shared.Database.Datacentre;
@@ -47,10 +46,7 @@ namespace LobbyServer.Manager
         
         public static bool GetCharacterSpawn(byte cityState, out WorldPosition spawnPosition)
         {
-            // TODO: loading to start zones doesn't complete yet due to not handling events
-            spawnPosition = new WorldPosition(628, new Vector3(-111.015739f, -6.999997f, -59.858192f), 1.5708f);
-            return true;
-            //return characterSpawnStore.TryGetValue(cityState, out spawnPosition);
+            return characterSpawnStore.TryGetValue(cityState, out spawnPosition);
         }
     }
 }

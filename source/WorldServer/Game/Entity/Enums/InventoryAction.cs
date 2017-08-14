@@ -1,4 +1,4 @@
-﻿namespace WorldServer.Game.Entity
+﻿namespace WorldServer.Game.Entity.Enums
 {
     public enum InventoryAction : byte
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Shared.Network;
 using WorldServer.Game.Entity;
+using WorldServer.Game.Entity.Enums;
 using WorldServer.Network.Message;
 
 namespace WorldServer.Network.Handler

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Shared.SqPack;
+using WorldServer.Game.Entity.Enums;
 
 namespace WorldServer.Game.Entity
 {

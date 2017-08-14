@@ -4,12 +4,12 @@ namespace WorldServer.Game.Map
 {
     public class Territory : BaseMap
     {
-        public ushort Id { get; }
+        public TerritoryTypeEntry Entry { get; }
         public byte Weather { get; private set; }
 
         public Territory(TerritoryTypeEntry entry)
         {
-            Id = (ushort)entry.Index;
+            Entry = entry;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Shared.Game;
 using WorldServer.Game.Entity;
+using WorldServer.Game.Entity.Enums;
 
 namespace WorldServer.Manager
 {
