@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerInventoryUpdateFinish, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerInventoryUpdateFinish)]
     public class ServerInventoryUpdateFinish : SubPacket
     {
         public uint Id;

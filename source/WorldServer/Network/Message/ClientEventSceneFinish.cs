@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientEventSceneFinish, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientEventSceneFinish)]
     public class ClientEventSceneFinish : SubPacket
     {
         public uint EventId { get; private set; }

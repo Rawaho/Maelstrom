@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerUnknown01FB, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerUnknown01FB)]
     public class ServerUnknown01FB : SubPacket
     {
         public override void Write(BinaryWriter writer)

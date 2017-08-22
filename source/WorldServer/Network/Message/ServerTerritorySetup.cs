@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerTerritorySetup, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerTerritorySetup)]
     public class ServerTerritorySetup : SubPacket
     {
         public byte WeatherId;

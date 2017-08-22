@@ -6,7 +6,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerPlayerSpawn, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerPlayerSpawn)]
     public class ServerPlayerSpawn : SubPacket
     {
         public byte SpawnIndex;

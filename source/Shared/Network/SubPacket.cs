@@ -31,7 +31,7 @@ namespace Shared.Network
             public const uint Length = 0x10;
 
             public ushort Unknown1; // always 0x14
-            public SubPacketOpcode Opcode;
+            public ushort Opcode;
             public uint Unknown2;
             public uint Timestamp;
             public uint Unknown4;
@@ -67,12 +67,12 @@ namespace Shared.Network
                 payload = stream.ToArray();
             }
 
-            if (attribute.Opcode != SubPacketOpcode.None)
+            if (attribute.ServerOpcode != SubPacketServerOpcode.None)
             {
                 SubMessageHeader = new MessageHeader
                 {
                     Unknown1  = 0x14,
-                    Opcode    = attribute.Opcode,
+                    Opcode    = (ushort)attribute.ServerOpcode,
                     Timestamp = (uint)DateTimeOffset.Now.ToUnixTimeSeconds()
                 };
 
@@ -84,7 +84,7 @@ namespace Shared.Network
             SubHeader = new Header
             {
                 Size   = (ushort)(Header.Length + payload.Length),
-                Type   = attribute.Opcode != SubPacketOpcode.None ? SubPacketType.Message : attribute.Type,
+                Type   = attribute.ServerOpcode != SubPacketServerOpcode.None ? SubPacketType.Message : attribute.Type,
                 Source = source,
                 Target = target
             };
@@ -120,7 +120,7 @@ namespace Shared.Network
                         stream.Position = 0L;
                     }
 
-                    subPacket = PacketManager.GetSubPacket(header.Type, messageHeader.Opcode, SubPacketDirection.Client) ?? new SubPacket();
+                    subPacket = PacketManager.GetSubPacket(header.Type, (SubPacketClientOpcode)messageHeader.Opcode, SubPacketServerOpcode.None) ?? new SubPacket();
                     subPacket.Initialise(header, messageHeader);
                     subPacket.Read(subReader);
                 }

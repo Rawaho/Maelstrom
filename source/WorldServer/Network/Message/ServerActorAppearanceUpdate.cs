@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerActorAppearanceUpdate, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerActorAppearanceUpdate)]
     public class ServerActorAppearanceUpdate : SubPacket
     {
         public ulong MainHandDisplayId;

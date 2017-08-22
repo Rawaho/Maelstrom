@@ -1,11 +1,10 @@
 ﻿using System.IO;
 using Shared.Network;
-using WorldServer.Game.Entity;
 using WorldServer.Game.Entity.Enums;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientInventoryAction, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientInventoryAction)]
     public class ClientInventoryAction : SubPacket
     {
         public InventoryAction Action { get; private set; }

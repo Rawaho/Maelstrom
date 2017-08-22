@@ -5,7 +5,7 @@ using Shared.Network;
 
 namespace LobbyServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerServiceAccountList, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerServiceAccountList)]
     public class ServerServiceAccountList : SubPacket
     {
         public const byte MaxServiceAccounts = 8;

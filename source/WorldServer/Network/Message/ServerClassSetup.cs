@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerClassSetup, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerClassSetup)]
     public class ServerClassSetup : SubPacket
     {
         public byte ClassJobId;

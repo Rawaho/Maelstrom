@@ -6,7 +6,7 @@ using WorldServer.Game;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerAchievementList, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerAchievementList)]
     public class ServerAchievementList : SubPacket
     {
         public BitArray AchievementMask;

@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerTerritoryPending, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerTerritoryPending)]
     public class ServerTerritoryPending : SubPacket
     {
         public uint LogMessageId;

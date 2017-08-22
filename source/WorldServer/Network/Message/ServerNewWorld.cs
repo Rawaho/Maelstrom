@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.NewWorld, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerNewWorld)]
     public class ServerNewWorld : SubPacket
     {
         public uint ActorId;

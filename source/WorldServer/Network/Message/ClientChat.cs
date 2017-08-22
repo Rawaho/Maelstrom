@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.Chat, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientChat)]
     public class ClientChat : SubPacket
     {
         public ushort Type { get; private set; }

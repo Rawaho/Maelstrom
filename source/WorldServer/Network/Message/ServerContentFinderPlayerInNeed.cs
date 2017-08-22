@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using Shared.Game.Enum;
 using Shared.Network;
 
 namespace WorldServer.Network.Message {
-    [SubPacket(SubPacketOpcode.ServerContentFinderPlayerInNeed, SubPacketDirection.Server)]
-    public class ServerContentFinderPlayerInNeed : SubPacket {
+    [SubPacket(SubPacketServerOpcode.ServerContentFinderPlayerInNeed)]
+    public class ServerContentFinderPlayerInNeed : SubPacket
+    {
         public ClassJobRole[] InNeed = new ClassJobRole[0x10];
         
         public override void Write(BinaryWriter writer)

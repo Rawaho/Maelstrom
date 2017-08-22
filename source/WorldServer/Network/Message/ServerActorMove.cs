@@ -5,7 +5,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerActorMove, SubPacketDirection.Server, false)]
+    [SubPacket(SubPacketServerOpcode.ServerActorMove, false)]
     public class ServerActorMove : SubPacket
     {
         public WorldPosition Position;

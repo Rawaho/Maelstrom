@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerMessage, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerMessage)]
     public class ServerMessage : SubPacket
     {
         public byte Flags;

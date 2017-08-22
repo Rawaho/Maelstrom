@@ -20,7 +20,7 @@ namespace LobbyServer.Network.Handler
             });
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientLobbyRequest, SubPacketHandlerFlags.RequiresEncryption)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientLobbyRequest, SubPacketHandlerFlags.RequiresEncryption)]
         public static async void HandleClientLobbyRequest(LobbySession session, ClientLobbyRequest sessionRequest)
         {
             session.Sequence = sessionRequest.Sequence;

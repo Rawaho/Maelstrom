@@ -5,7 +5,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerPlayerSetup, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerPlayerSetup)]
     public class ServerPlayerSetup : SubPacket
     {
         public CharacterInfo Character;

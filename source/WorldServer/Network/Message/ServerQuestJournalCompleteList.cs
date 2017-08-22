@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerQuestJournalCompleteList, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerQuestJournalCompleteList)]
     public class ServerQuestJournalCompleteList : SubPacket
     {
         public override void Write(BinaryWriter writer)

@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientGmCommandInt, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientGmCommandInt)]
     public class ClientGmCommandInt : SubPacket
     {
         public GmCommand Command { get; private set; }

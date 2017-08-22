@@ -1,11 +1,10 @@
 ﻿using System.IO;
 using Shared.Network;
-using WorldServer.Game.Entity;
 using WorldServer.Game.Entity.Enums;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerItemSetup, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerItemSetup)]
     public class ServerItemSetup : SubPacket
     {
         public uint Index;

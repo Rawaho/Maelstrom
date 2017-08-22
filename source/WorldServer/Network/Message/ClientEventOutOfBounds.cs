@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientEventOutOfBounds, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientEventOutOfBounds)]
     public class ClientEventOutOfBounds : SubPacket
     {
         public uint EventId { get; private set; }

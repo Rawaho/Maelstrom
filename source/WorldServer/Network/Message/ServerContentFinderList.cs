@@ -5,7 +5,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerContentFinderList, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerContentFinderList)]
     public class ServerContentFinderList : SubPacket
     {
         public BitArray Contents = new BitArray(0x48 * 8, false);

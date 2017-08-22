@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerPlayerStateFlags, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerPlayerStateFlags)]
     public class ServerPlayerStateFlags : SubPacket
     {
         public BitArray StateMask { get; } = new BitArray(8 * 8);

@@ -6,7 +6,7 @@ namespace WorldServer.Network.Handler
 {
     public static class ChatHandler
     {
-        [SubPacketHandler(SubPacketOpcode.Chat, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientChat, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleChat(WorldSession session, ClientChat chat)
         {
             if (chat.Message.StartsWith("."))

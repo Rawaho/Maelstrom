@@ -2,7 +2,7 @@
 using Shared.Network;
 
 namespace WorldServer.Network.Message {
-    [SubPacket(SubPacketOpcode.ServerContentFinderMemberStatus, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerContentFinderMemberStatus)]
     public class ServerContentFinderMemberStatus : SubPacket
     {
         public ushort ContentId;

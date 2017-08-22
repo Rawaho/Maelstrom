@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientEventAreaTrigger, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientEventAreaTrigger)]
     public class ClientEventAreaTrigger : SubPacket
     {
         public uint EventId { get; private set; }

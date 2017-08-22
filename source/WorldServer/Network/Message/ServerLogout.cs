@@ -2,7 +2,7 @@
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerLogout, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerLogout)]
     public class ServerLogout : SubPacket
     {
     }

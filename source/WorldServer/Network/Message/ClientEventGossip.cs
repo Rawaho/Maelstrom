@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientEventGossip, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientEventGossip)]
     public class ClientEventGossip : SubPacket
     {
         public ulong ActorId { get; private set; }

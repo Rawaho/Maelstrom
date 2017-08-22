@@ -3,7 +3,7 @@ using System.IO;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerContentFinderRegister, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerContentFinderRegister)]
     public class ServerContentFinderRegister : SubPacket
     {
         public uint Unknown1 = 0x381;

@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientEventEmote, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientEventEmote)]
     public class ClientEventEmote : SubPacket
     {
         public ulong ActorId { get; private set; }

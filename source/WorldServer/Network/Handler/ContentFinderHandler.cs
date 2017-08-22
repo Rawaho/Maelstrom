@@ -7,19 +7,21 @@ namespace WorldServer.Network.Handler
 {
     public static class ContentFinderHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientContentFinderRequestInfo, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientContentFinderRequestInfo, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleChat(WorldSession session, ClientContentFinderRequestInfo info)
         {
             #if DEBUG
-            Console.WriteLine("Client requested content finder info");
+                Console.WriteLine("Client requested content finder info");
             #endif
             
             // TODO
-            session.Send(new ServerContentFinderDutyInfo {
+            session.Send(new ServerContentFinderDutyInfo
+            {
                 PenaltyTime = 0
             });
             
-            session.Send(new ServerContentFinderPlayerInNeed {
+            session.Send(new ServerContentFinderPlayerInNeed
+            {
                 InNeed = new ClassJobRole[0x10]
             });
         }

@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientPlayerMove, SubPacketDirection.Client, false)]
+    [SubPacket(SubPacketClientOpcode.ClientPlayerMove, false)]
     public class ClientPlayerMove : SubPacket
     {
         public float Orientation { get; private set; }

@@ -5,16 +5,21 @@ namespace Shared.Network
     [AttributeUsage(AttributeTargets.Class)]
     public class SubPacketAttribute : Attribute
     {
-        public SubPacketOpcode Opcode { get; }
+        public SubPacketClientOpcode ClientOpcode { get; }
+        public SubPacketServerOpcode ServerOpcode { get; }
         public SubPacketType Type { get; }
-        public SubPacketDirection Direction { get; }
         public bool Log { get; }
 
-        public SubPacketAttribute(SubPacketOpcode opcode, SubPacketDirection direction, bool log = true)
+        public SubPacketAttribute(SubPacketClientOpcode opcode, bool log = true)
         {
-            Opcode    = opcode;
-            Direction = direction;
-            Log       = log;
+            ClientOpcode = opcode;
+            Log          = log;
+        }
+
+        public SubPacketAttribute(SubPacketServerOpcode opcode, bool log = true)
+        {
+            ServerOpcode = opcode;
+            Log          = log;
         }
 
         public SubPacketAttribute(SubPacketType type, bool log = true)

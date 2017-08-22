@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace LobbyServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ClientEnterWorld, SubPacketDirection.Client)]
+    [SubPacket(SubPacketClientOpcode.ClientEnterWorld)]
     public class ClientEnterWorld : SubPacket
     {
         public ulong Sequence { get; private set; }

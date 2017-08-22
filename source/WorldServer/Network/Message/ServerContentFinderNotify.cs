@@ -3,7 +3,7 @@ using System.IO;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerContentFinderNotify, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerContentFinderNotify)]
     public class ServerContentFinderNotify : SubPacket
     {
         public uint State;

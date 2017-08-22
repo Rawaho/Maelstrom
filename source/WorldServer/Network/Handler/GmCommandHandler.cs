@@ -5,13 +5,13 @@ namespace WorldServer.Network.Handler
 {
     public static class GmCommandHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientGmCommandInt, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientGmCommandInt, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleGmCommandInt(WorldSession session, ClientGmCommandInt gmCommand)
         {
             GmCommandManager.Invoke(session, gmCommand);
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientGmCommandString, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientGmCommandString, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleGmCommandString(WorldSession session, ClientGmCommandString gmCommand)
         {
             GmCommandManager.Invoke(session, gmCommand);

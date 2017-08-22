@@ -1,6 +1,5 @@
 ﻿using System;
 using Shared.Network;
-using WorldServer.Game.Entity;
 using WorldServer.Game.Entity.Enums;
 using WorldServer.Network.Message;
 
@@ -8,7 +7,7 @@ namespace WorldServer.Network.Handler
 {
     public static class ItemHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientInventoryAction, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientInventoryAction, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleClientInventoryAction(WorldSession session, ClientInventoryAction inventoryAction)
         {
             try

@@ -97,6 +97,7 @@
     <Compile Include="JsonProvider.cs" />
     <Compile Include="Network\Connection.cs" />
     <Compile Include="Network\ConnectionHeartbeat.cs" />
+    <Compile Include="Network\SubPacketClientOpcode.cs" />
     <Compile Include="Network\SubPacketDirection.cs" />
     <Compile Include="Network\Extensions.cs" />
     <Compile Include="Network\FloodInfo.cs" />
@@ -111,11 +112,11 @@
     <Compile Include="Network\Session.cs" />
     <Compile Include="Network\SessionAttribute.cs" />
     <Compile Include="Network\SubPacketHandlerAttribute.cs" />
-    <Compile Include="Network\SubPacketOpcode.cs" />
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\PacketResult.cs" />
     <Compile Include="Network\SubPacket.cs" />
     <Compile Include="Network\SubPacketAttribute.cs" />
+    <Compile Include="Network\SubPacketServerOpcode.cs" />
     <Compile Include="Network\SubPacketType.cs" />
     <Compile Include="Network\ZlibProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

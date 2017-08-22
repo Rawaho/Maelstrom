@@ -10,12 +10,12 @@ namespace Shared.Network
     public static class PacketManager
     {
         private static readonly Dictionary<SubPacketType, (Type Type, SubPacketAttribute Attribute)> typeSubPackets = new Dictionary<SubPacketType, (Type Type, SubPacketAttribute Attribute)>();
-        private static readonly Dictionary<SubPacketOpcode, (Type Type, SubPacketAttribute Attribute)> opcodeClientSubPackets = new Dictionary<SubPacketOpcode, (Type Type, SubPacketAttribute Attribute)>();
-        private static readonly Dictionary<SubPacketOpcode, (Type Type, SubPacketAttribute Attribute)> opcodeServerSubPackets = new Dictionary<SubPacketOpcode, (Type Type, SubPacketAttribute Attribute)>();
+        private static readonly Dictionary<SubPacketClientOpcode, (Type Type, SubPacketAttribute Attribute)> opcodeClientSubPackets = new Dictionary<SubPacketClientOpcode, (Type Type, SubPacketAttribute Attribute)>();
+        private static readonly Dictionary<SubPacketServerOpcode, (Type Type, SubPacketAttribute Attribute)> opcodeServerSubPackets = new Dictionary<SubPacketServerOpcode, (Type Type, SubPacketAttribute Attribute)>();
 
         public delegate void SubPacketHandler(Session session, SubPacket subPacket);
         private static readonly Dictionary<SubPacketType, (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute)> subPacketTypeHandlers = new Dictionary<SubPacketType, (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute)>();
-        private static readonly Dictionary<SubPacketOpcode, (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute)> subPacketOpcodeHandlers = new Dictionary<SubPacketOpcode, (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute)>();
+        private static readonly Dictionary<SubPacketClientOpcode, (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute)> subPacketOpcodeHandlers = new Dictionary<SubPacketClientOpcode, (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute)>();
 
         public static void Initialise()
         {
@@ -32,13 +32,10 @@ namespace Shared.Network
             {
                 foreach (SubPacketAttribute attribute in type.GetCustomAttributes<SubPacketAttribute>())
                 {
-                    if (attribute.Opcode != SubPacketOpcode.None)
-                    {
-                        if ((attribute.Direction & SubPacketDirection.Client) != 0)
-                            opcodeClientSubPackets[attribute.Opcode] = (type, attribute);
-                        if ((attribute.Direction & SubPacketDirection.Server) != 0)
-                            opcodeServerSubPackets[attribute.Opcode] = (type, attribute);
-                    }
+                    if (attribute.ClientOpcode != SubPacketClientOpcode.None)
+                        opcodeClientSubPackets[attribute.ClientOpcode] = (type, attribute);
+                    else if (attribute.ServerOpcode != SubPacketServerOpcode.None)
+                        opcodeServerSubPackets[attribute.ServerOpcode] = (type, attribute);
                     else if (attribute.Type != SubPacketType.None)
                         typeSubPackets[attribute.Type] = (type, attribute);
                 }
@@ -72,8 +69,8 @@ namespace Shared.Network
                         Expression<SubPacketHandler> lambda = Expression.Lambda<SubPacketHandler>(callExpression, sessionParameter, subPacketParameter);
 
                         SubPacketHandler handler = lambda.Compile();
-                        if (attribute.Opcode != SubPacketOpcode.None)
-                            subPacketOpcodeHandlers[attribute.Opcode] = (handler, attribute);
+                        if (attribute.ClientOpcode != SubPacketClientOpcode.None)
+                            subPacketOpcodeHandlers[attribute.ClientOpcode] = (handler, attribute);
                         else if (attribute.Type != SubPacketType.None)
                             subPacketTypeHandlers[attribute.Type] = (handler, attribute);
                     }
@@ -83,16 +80,13 @@ namespace Shared.Network
             Console.WriteLine($"Initialised {subPacketTypeHandlers.Count + subPacketOpcodeHandlers.Count} packet handler(s) in {sw.ElapsedMilliseconds}ms.");
         }
 
-        private static (Type Type, SubPacketAttribute Attribute) GetSubPacketInfo(SubPacketType type, SubPacketOpcode opcode, SubPacketDirection direction)
+        private static (Type Type, SubPacketAttribute Attribute) GetSubPacketInfo(SubPacketType type, SubPacketClientOpcode clientOpcode, SubPacketServerOpcode serverOpcode)
         {
             (Type Type, SubPacketAttribute Attribute) subPacketInfo;
-            if (opcode != SubPacketOpcode.None)
-            {
-                if (direction == SubPacketDirection.Client)
-                    opcodeClientSubPackets.TryGetValue(opcode, out subPacketInfo);
-                else
-                    opcodeServerSubPackets.TryGetValue(opcode, out subPacketInfo);
-            }
+            if (clientOpcode != SubPacketClientOpcode.None)
+                opcodeClientSubPackets.TryGetValue(clientOpcode, out subPacketInfo);
+            else if (serverOpcode != SubPacketServerOpcode.None)
+                opcodeServerSubPackets.TryGetValue(serverOpcode, out subPacketInfo);
             else
                 typeSubPackets.TryGetValue(type, out subPacketInfo);
 
@@ -109,17 +103,17 @@ namespace Shared.Network
             Debug.Assert(subPacket != null);
 
             (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute) info;
-            if (subPacket.SubMessageHeader.Opcode != SubPacketOpcode.None)
-                subPacketOpcodeHandlers.TryGetValue(subPacket.SubMessageHeader.Opcode, out info);
+            if ((SubPacketClientOpcode)subPacket.SubMessageHeader.Opcode != SubPacketClientOpcode.None)
+                subPacketOpcodeHandlers.TryGetValue((SubPacketClientOpcode)subPacket.SubMessageHeader.Opcode, out info);
             else
                 subPacketTypeHandlers.TryGetValue(subPacket.SubHeader.Type, out info);
 
             return info;
         }
 
-        public static SubPacket GetSubPacket(SubPacketType type, SubPacketOpcode opcode, SubPacketDirection direction)
+        public static SubPacket GetSubPacket(SubPacketType type, SubPacketClientOpcode clientOpcode, SubPacketServerOpcode serverOpcode)
         {
-            (Type Type, SubPacketAttribute Attribute) subPacketInfo = GetSubPacketInfo(type, opcode, direction);
+            (Type Type, SubPacketAttribute Attribute) subPacketInfo = GetSubPacketInfo(type, clientOpcode, serverOpcode);
             return subPacketInfo.Type != null ? (SubPacket)Activator.CreateInstance(subPacketInfo.Type) : null;
         }
 
@@ -130,13 +124,23 @@ namespace Shared.Network
             (SubPacketHandler Handler, SubPacketHandlerAttribute Attribute) info = _GetSubPacketHandlerInfo(subPacket);
             info.Handler?.Invoke(session, subPacket);
         }
-        
+
         [Conditional("DEBUG")]
         public static void CLogPacket(SubPacketDirection direction, SubPacket subPacket)
         {
-            (Type Type, SubPacketAttribute Attribute) subPacketInfo = GetSubPacketInfo(subPacket.SubHeader.Type, subPacket.SubMessageHeader.Opcode, direction);
-            if (subPacketInfo.Type == null || subPacketInfo.Attribute.Log)
-                Console.WriteLine($"Packet({(direction == SubPacketDirection.Client ? "C->S" : "S->C")}) - Size: {subPacket.SubHeader.Size}, Type: {subPacket.SubHeader.Type}, Opcode: {subPacket.SubMessageHeader.Opcode}");
+            (Type Type, SubPacketAttribute Attribute) subPacketInfo;
+            if (direction == SubPacketDirection.Client)
+            {
+                subPacketInfo = GetSubPacketInfo(subPacket.SubHeader.Type, (SubPacketClientOpcode)subPacket.SubMessageHeader.Opcode, SubPacketServerOpcode.None);
+                if(subPacketInfo.Type == null || subPacketInfo.Attribute.Log)
+                    Console.WriteLine($"Packet(C->S) - Size: {subPacket.SubHeader.Size}, Type: {subPacket.SubHeader.Type}, Opcode: {(SubPacketClientOpcode)subPacket.SubMessageHeader.Opcode}");
+            }
+            else
+            {
+                subPacketInfo = GetSubPacketInfo(subPacket.SubHeader.Type, SubPacketClientOpcode.None, (SubPacketServerOpcode)subPacket.SubMessageHeader.Opcode);
+                if (subPacketInfo.Type == null || subPacketInfo.Attribute.Log)
+                    Console.WriteLine($"Packet(S->C) - Size: {subPacket.SubHeader.Size}, Type: {subPacket.SubHeader.Type}, Opcode: {(SubPacketServerOpcode)subPacket.SubMessageHeader.Opcode}");
+            }
         }
     }
 }

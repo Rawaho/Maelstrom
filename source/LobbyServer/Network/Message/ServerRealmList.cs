@@ -4,7 +4,7 @@ using Shared.Network;
 
 namespace LobbyServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerRealmList, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerRealmList)]
     public class ServerRealmList : SubPacket
     {
         public const byte MaxRealmsPerPacket = 6;

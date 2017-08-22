@@ -6,7 +6,7 @@ namespace WorldServer.Network.Handler
 {
     public static class ActorActionHandler
     {
-        [SubPacketHandler(SubPacketOpcode.ClientActorAction, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientActorAction, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleActorAction(WorldSession session, ClientActorAction actorAction)
         {
             Console.WriteLine($"Got Actor Action: {actorAction.Action}(0x{actorAction.Action:X}), {actorAction.Parameters[0]}, "

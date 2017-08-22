@@ -4,7 +4,7 @@ using WorldServer.Game.Event;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerEventStart, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerEventStart)]
     public class ServerEventStart : SubPacket
     {
         public Event Event;

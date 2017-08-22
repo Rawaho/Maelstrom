@@ -6,7 +6,7 @@ using Shared.Network;
 
 namespace LobbyServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerCharacterList, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerCharacterList)]
     public class ServerCharacterList : SubPacket
     {
         public const byte MaxCharactersPerPacket = 2;

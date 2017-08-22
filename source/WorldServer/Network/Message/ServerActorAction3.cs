@@ -3,7 +3,7 @@ using Shared.Network;
 
 namespace WorldServer.Network.Message
 {
-    [SubPacket(SubPacketOpcode.ServerActorAction3, SubPacketDirection.Server)]
+    [SubPacket(SubPacketServerOpcode.ServerActorAction3)]
     public class ServerActorAction3 : SubPacket
     {
         public ActorAction Action;

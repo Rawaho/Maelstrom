@@ -7,7 +7,7 @@ namespace WorldServer.Network.Handler
 {
     public static class ActorHandler
     {
-        [SubPacketHandler(SubPacketOpcode.NewWorld, SubPacketHandlerFlags.RequiresPlayer)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientNewWorld, SubPacketHandlerFlags.RequiresPlayer)]
         public static void HandleNewWorld(WorldSession session, SubPacket subPacket)
         {
             if (!session.Player.IsLogin || session.Player.InWorld)
@@ -17,13 +17,13 @@ namespace WorldServer.Network.Handler
             MapManager.AddToMap(session.Player);
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientTerritoryFinalise, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientTerritoryFinalise, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleClientTerritoryFinalise(WorldSession session, SubPacket subPacket)
         {
             session.Player.SendVisible();
         }
 
-        [SubPacketHandler(SubPacketOpcode.ClientPlayerMove, SubPacketHandlerFlags.RequiresWorld)]
+        [SubPacketHandler(SubPacketClientOpcode.ClientPlayerMove, SubPacketHandlerFlags.RequiresWorld)]
         public static void HandleClientPlayerMove(WorldSession session, ClientPlayerMove actorMove)
         {
             var newPosition = new WorldPosition((ushort)session.Player.Map.Entry.Index, actorMove.Position, actorMove.Orientation);
