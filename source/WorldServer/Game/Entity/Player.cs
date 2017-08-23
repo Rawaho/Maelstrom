@@ -105,7 +105,7 @@ namespace WorldServer.Game.Entity
                     new ServerPlayerSpawn
                     {
                         SpawnIndex            = GetSpawnIndex(actor.Id),
-                        Position              = Position,
+                        Position              = player.Position,
                         Character             = player.Character,
                         MainHandDisplayId     = weaponDisplayId.MainHand,
                         OffHandDisplayId      = weaponDisplayId.OffHand,
