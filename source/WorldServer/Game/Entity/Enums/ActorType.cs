@@ -1,4 +1,4 @@
-﻿namespace WorldServer.Game
+﻿namespace WorldServer.Game.Entity.Enums
 {
     public enum ActorType : byte
     {

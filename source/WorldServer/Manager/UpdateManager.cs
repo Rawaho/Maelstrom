@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using Shared.Network;
 using WorldServer.Game.Map;
+using WorldServer.Game.Social;
 
 namespace WorldServer.Manager
 {
@@ -18,8 +19,9 @@ namespace WorldServer.Manager
                 while (true)
                 {
                     sw.Restart();
-                    
+
                     NetworkManager.Update(lastTick);
+                    SocialManager.Update(lastTick);
                     MapManager.Update();
 
                     Thread.Sleep(1);

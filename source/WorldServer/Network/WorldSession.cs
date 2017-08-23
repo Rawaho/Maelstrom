@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Shared.Network;
 using WorldServer.Game.Entity;
 
@@ -31,6 +32,14 @@ namespace WorldServer.Network
                 return false;
             }
 
+            if ((attribute.Flags & SubPacketHandlerFlags.RequiresParty) != 0 && Player.Party == null)
+            {
+                #if DEBUG
+                    Console.WriteLine($"Rejecting packet ({subPacket.SubHeader.Type}, {subPacket.SubMessageHeader.Opcode}), world session ({Remote}) character isn't in a party!");
+                #endif
+                return false;
+            }
+
             return true;
         }
 
@@ -38,6 +47,12 @@ namespace WorldServer.Network
         {
             uint actorId = Player?.Character.ActorId ?? 0u;
             Send(actorId, actorId, subPacket);
+        }
+
+        public void Send(IEnumerable<SubPacket> subPackets)
+        {
+            foreach (SubPacket subPacket in subPackets)
+                Send(subPacket);
         }
 
         public override void Disconnect()

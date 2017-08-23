@@ -25,6 +25,11 @@ namespace Shared.Network
         /// <summary>
         /// Ensures world session has an assigned player character that has been added to a territory(map).
         /// </summary>
-        RequiresWorld      = 0x08
+        RequiresWorld      = 0x08,
+
+        /// <summary>
+        /// Ensures world session assigned player character has a party.
+        /// </summary>
+        RequiresParty      = 0x10
     }
 }

@@ -4,6 +4,7 @@ using Shared.Database;
 using Shared.Network;
 using Shared.SqPack;
 using WorldServer.Game.Map;
+using WorldServer.Game.Social;
 using WorldServer.Manager;
 using WorldServer.Network;
 using WorldServer.Script;
@@ -31,6 +32,7 @@ namespace WorldServer
             AssetManager.Initialise();
             ScriptManager.Initialise();
             MapManager.Initialise();
+            SocialManager.Initialise();
             NetworkManager.Initialise(ConfigManager.Config.Server.WorldPort);
             UpdateManager.Initialise();
             CommandManager.Initialise();

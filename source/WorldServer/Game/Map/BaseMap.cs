@@ -59,6 +59,9 @@ namespace WorldServer.Game.Map
 
             actor.Map = (Territory)this;
             actor.OnAddToMap();
+
+            if (actor.IsPlayer)
+                MapManager._AddPlayer(actor.ToPlayer);
         }
 
         public void RemoveActor(Actor actor)
@@ -78,6 +81,9 @@ namespace WorldServer.Game.Map
 
             actor.OnRemoveFromMap();
             actor.Map = null;
+
+            if (actor.IsPlayer)
+                MapManager._RemovePlayer(actor.ToPlayer);
         }
 
         public void RelocateActor(Actor actor, WorldPosition newPosition)

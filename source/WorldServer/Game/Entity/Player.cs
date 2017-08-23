@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Shared.Database.Datacentre;
 using Shared.Game;
 using Shared.Game.Enum;
 using WorldServer.Game.Achievement;
 using WorldServer.Game.Entity.Enums;
 using WorldServer.Game.Event;
+using WorldServer.Game.Map;
+using WorldServer.Game.Social;
 using WorldServer.Network;
 using WorldServer.Network.Message;
 
@@ -20,6 +23,9 @@ namespace WorldServer.Game.Entity
         public Inventory Inventory { get; }
         public EventManager Event { get; }
         public AchievementManager Achievement { get; }
+
+        public Party Party { get; private set; }
+        private readonly List<SocialInviteRequest> socialInviteLookup = new List<SocialInviteRequest>();
 
         public PlayerFlagsCu FlagsCu { get; private set; } = PlayerFlagsCu.FirstLogin;
         public bool IsLogin { get; set; } = true;
@@ -141,12 +147,19 @@ namespace WorldServer.Game.Entity
                     + "Find out about this server project at https://www.github.com/Rawaho/Maelstrom"
             });
 
+            Session.Send(new ServerSocialBlacklist());
+
             // TODO: client hangs without these sent
             Session.Send(new ServerUnknown01FB());
             Session.Send(new ServerUnknown01FD());
             
             Session.Send(new ServerQuestJournalActiveList());
             Session.Send(new ServerQuestJournalCompleteList());
+        }
+
+        public void OnLogout()
+        {
+            DeclineSocialInvites();
         }
 
         public override void OnAddToMap()
@@ -194,6 +207,9 @@ namespace WorldServer.Game.Entity
                 SendActor(actor);
         }
 
+        /// <summary>
+        /// Teleport player to a new world position.
+        /// </summary>
         public void TeleportTo(WorldPosition newPosition)
         {
             if (pendingTeleportPosition != null)
@@ -218,6 +234,59 @@ namespace WorldServer.Game.Entity
             }
 
             Map.RemoveActor(this);
+        }
+
+        /// <summary>
+        /// Invite player to your party, if no party exists one will be created.
+        /// </summary>
+        public void PartyInvite(string inviteeName)
+        {
+            Player invitee = MapManager.FindPlayer(inviteeName);
+            if (invitee == null)
+                throw new InvalidPlayerException(inviteeName);
+
+            if (Party == null)
+                Party = SocialManager.NewParty(this);
+
+            Party.Invite(this, invitee);
+        }
+
+        public void SetParty(Party party)
+        {
+            if (party != null && Party != null)
+                throw new PartyStateException($"Can't assign {Character.Name} to a new party, they haven't left their current one!");
+
+            Party = party;
+        }
+
+        public SocialInviteRequest FindSocialInvite(ulong hostId, SocialType type)
+        {
+            return socialInviteLookup.SingleOrDefault(s => s.HostId == hostId && s.Type == type);
+        }
+
+        public void AddSocialInvite(SocialInviteRequest inviteRequest)
+        {
+            socialInviteLookup.Add(inviteRequest);
+        }
+
+        public void RemoveSocialInvite(ulong hostId, SocialType type)
+        {
+            SocialInviteRequest inviteRequest = FindSocialInvite(hostId, type);
+            if (inviteRequest != null)
+                socialInviteLookup.Remove(inviteRequest);
+        }
+
+        /// <summary>
+        /// Decline all pending social invites of a type, if no type is specified all invites will be declined.
+        /// </summary>
+        public void DeclineSocialInvites(SocialType type = SocialType.None)
+        {
+            IEnumerable<SocialInviteRequest> invites = type != SocialType.None ? socialInviteLookup.Where(s => s.Type == type) : socialInviteLookup;
+            foreach (SocialInviteRequest inviteRequest in invites)
+            {
+                SocialBase socialEntity = SocialManager.FindSocialEntity<SocialBase>(inviteRequest.Type, inviteRequest.EntityId);
+                socialEntity?.InviteResponse(this, 0);
+            }
         }
     }
 }
