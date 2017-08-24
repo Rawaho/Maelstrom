@@ -1,0 +1,3 @@
+[submodule "source/SaintCoinach"]
+	path = source/SaintCoinach
+	url = https://github.com/Rawaho/SaintCoinach.git

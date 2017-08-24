@@ -142,6 +142,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SaintCoinach\SaintCoinach\SaintCoinach.csproj">
+      <Project>{8a7d65eb-3de3-4631-b286-cc73a3126002}</Project>
+      <Name>SaintCoinach</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
