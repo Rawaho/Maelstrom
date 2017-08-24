@@ -1,6 +1,6 @@
 ## Maelstrom
 ### Information
-A server emulator for Final Fantasy XIV that supports Stormblood patch 4.05.
+A server emulator for Final Fantasy XIV that supports Stormblood patch 4.06.
 
 ### Getting Started
 [Server Setup Guide](https://github.com/Rawaho/Maelstrom/wiki/Installation)
