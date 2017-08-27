@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using LobbyServer.Manager;
 using LobbyServer.Network.Message;
 using Shared.Cryptography;
 using Shared.Database;
+using Shared.Database.Authentication;
 using Shared.Network;
 
 namespace LobbyServer.Network.Handler
@@ -21,7 +23,7 @@ namespace LobbyServer.Network.Handler
         }
 
         [SubPacketHandler(SubPacketClientOpcode.ClientLobbyRequest, SubPacketHandlerFlags.RequiresEncryption)]
-        public static async void HandleClientLobbyRequest(LobbySession session, ClientLobbyRequest sessionRequest)
+        public static void HandleClientLobbyRequest(LobbySession session, ClientLobbyRequest sessionRequest)
         {
             session.Sequence = sessionRequest.Sequence;
 
@@ -53,26 +55,31 @@ namespace LobbyServer.Network.Handler
                 Console.WriteLine($"Token: {sessionRequest.Token}");
             #endif
 
-            uint accountId = await DatabaseManager.Authentication.GetAccount(session.AuthToken.SessionId);
-            if (accountId == 0u)
+            session.NewEvent(new DatabaseGenericEvent<uint>(DatabaseManager.Authentication.GetAccount(session.AuthToken.SessionId), accountId =>
             {
-                session.SendError(1000, 13100);
-                return;
-            }
+                if (accountId == 0u)
+                {
+                    session.SendError(1000, 13100);
+                    return;
+                }
 
-            session.ServiceAccounts = await DatabaseManager.Authentication.GetServiceAccounts(accountId);            
-            if (session.ServiceAccounts.Count == 0)
-            {
-                // TODO: probably not the correct error to display when no service accounts are present
-                session.SendError(1000, 13209);
-                return;
-            }
+                session.NewEvent(new DatabaseGenericEvent<List<ServiceAccountInfo>>(DatabaseManager.Authentication.GetServiceAccounts(accountId), serviceAccounts =>
+                {
+                    if (serviceAccounts.Count == 0)
+                    {
+                        // TODO: probably not the correct error to display when no service accounts are present
+                        session.SendError(1000, 13209);
+                        return;
+                    }
 
-            session.Send(new ServerServiceAccountList
-            {
-                Sequence        = session.Sequence,
-                ServiceAccounts = session.ServiceAccounts
-            });
+                    session.ServiceAccounts = serviceAccounts;
+                    session.Send(new ServerServiceAccountList
+                    {
+                        Sequence        = session.Sequence,
+                        ServiceAccounts = session.ServiceAccounts
+                    });
+                }));
+            }));
         }
     }
 }

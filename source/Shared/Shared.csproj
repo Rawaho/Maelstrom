@@ -69,6 +69,8 @@
     <Compile Include="Cryptography\XxHash.cs" />
     <Compile Include="Database\Authentication\ServiceAccountInfo.cs" />
     <Compile Include="Database\Authentication\AuthenticationDatabase.cs" />
+    <Compile Include="Database\DatabaseEvent.cs" />
+    <Compile Include="Database\DatabaseGenericEvent.cs" />
     <Compile Include="Database\DatabaseTransaction.cs" />
     <Compile Include="Database\Datacentre\CharacterAppearanceInfo.cs" />
     <Compile Include="Database\Datacentre\CharacterClassInfo.cs" />
@@ -80,12 +82,15 @@
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\Datacentre\DatacentreDatabase.cs" />
     <Compile Include="Database\Extensions.cs" />
+    <Compile Include="Game\IBaseEvent.cs" />
     <Compile Include="Database\MySqlResult.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Database\StoredPreparedStatement.cs" />
     <Compile Include="Database\World\WorldDatabase.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Game\BasicEvent.cs" />
+    <Compile Include="Game\BasicEventGeneric.cs" />
     <Compile Include="Game\Enum\ClassJob.cs" />
     <Compile Include="Game\Enum\ClassJobRole.cs" />
     <Compile Include="Game\Enum\Expansion.cs" />

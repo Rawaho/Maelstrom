@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using LobbyServer.Manager;
@@ -67,61 +69,65 @@ namespace LobbyServer.Network.Handler
             }
         }
 
-        private static async void SendCharacterList(LobbySession session)
+        private static void SendCharacterList(LobbySession session)
         {
-            session.Characters = await DatabaseManager.DataCentre.GetCharacters(session.ServiceAccount.Id);
-            ServerCharacterList characterList = new ServerCharacterList
+            session.NewEvent(new DatabaseGenericEvent<List<CharacterInfo>>(DatabaseManager.DataCentre.GetCharacters(session.ServiceAccount.Id), characters =>
             {
-                VeteranRank               = 0,
-                DaysTillNextVeteranRank   = 0u,
-                DaysSubscribed            = 0u,
-                SubscriptionDaysRemaining = 0u,
-                RealmCharacterLimit       = session.ServiceAccount.RealmCharacterLimit,
-                AccountCharacterLimit     = session.ServiceAccount.AccountCharacterLimit,
-                Expansion                 = session.ServiceAccount.Expansion,
-                Offset                    = 1
-            };
+                session.Characters = characters;
 
-            if (session.Characters.Count == 0)
-            {
-                session.Send(characterList);
-                return;
-            }
-
-            for (int i = 0; i < session.Characters.Count; i++)
-            {
-                // client expects no more than 2 characters per chunk
-                if (i % ServerCharacterList.MaxCharactersPerPacket == 0)
+                ServerCharacterList characterList = new ServerCharacterList
                 {
-                    // flush previous chunk
-                    if (i != 0)
+                    VeteranRank               = 0,
+                    DaysTillNextVeteranRank   = 0u,
+                    DaysSubscribed            = 0u,
+                    SubscriptionDaysRemaining = 0u,
+                    RealmCharacterLimit       = session.ServiceAccount.RealmCharacterLimit,
+                    AccountCharacterLimit     = session.ServiceAccount.AccountCharacterLimit,
+                    Expansion                 = session.ServiceAccount.Expansion,
+                    Offset                    = 1
+                };
+
+                if (session.Characters.Count == 0)
+                {
+                    session.Send(characterList);
+                    return;
+                }
+
+                for (int i = 0; i < session.Characters.Count; i++)
+                {
+                    // client expects no more than 2 characters per chunk
+                    if (i % ServerCharacterList.MaxCharactersPerPacket == 0)
+                    {
+                        // flush previous chunk
+                        if (i != 0)
+                        {
+                            session.Send(characterList);
+                            session.FlushPacketQueue();
+                            characterList.Characters.Clear();
+                        }
+
+                        // weird...
+                        characterList.Offset = (byte)(session.Characters.Count - i <= ServerCharacterList.MaxCharactersPerPacket ? i * 2 + 1 : i * 2);
+                    }
+
+                    RealmInfo realmInfo = AssetManager.GetRealmInfo(session.Characters[i].RealmId);
+                    if (realmInfo == null)
+                        continue;
+
+                    characterList.Characters.Add(((byte)i, realmInfo.Name, session.Characters[i]));
+                
+                    // flush final chunk
+                    if (i == session.Characters.Count - 1)
                     {
                         session.Send(characterList);
                         session.FlushPacketQueue();
-                        characterList.Characters.Clear();
                     }
-
-                    // weird...
-                    characterList.Offset = (byte)(session.Characters.Count - i <= ServerCharacterList.MaxCharactersPerPacket ? i * 2 + 1 : i * 2);
                 }
-
-                RealmInfo realmInfo = AssetManager.GetRealmInfo(session.Characters[i].RealmId);
-                if (realmInfo == null)
-                    continue;
-
-                characterList.Characters.Add(((byte)i, realmInfo.Name, session.Characters[i]));
-                
-                // flush final chunk
-                if (i == session.Characters.Count - 1)
-                {
-                    session.Send(characterList);
-                    session.FlushPacketQueue();
-                }
-            }
+            }));
         }
 
         [SubPacketHandler(SubPacketClientOpcode.ClientCharacterCreate, SubPacketHandlerFlags.RequiresEncryption | SubPacketHandlerFlags.RequiresAccount)]
-        public static async void HandleCharacterCreate(LobbySession session, ClientCharacterCreate characterCreate)
+        public static void HandleCharacterCreate(LobbySession session, ClientCharacterCreate characterCreate)
         {
             session.Sequence = characterCreate.Sequence;
             switch (characterCreate.Type)
@@ -133,32 +139,35 @@ namespace LobbyServer.Network.Handler
                     if (realmInfo == null)
                         return;
 
-                    if (!CharacterInfo.VerifyName(characterCreate.Name) || !await DatabaseManager.DataCentre.IsCharacterNameAvailable(characterCreate.Name))
+                    session.NewEvent(new DatabaseGenericEvent<bool>(DatabaseManager.DataCentre.IsCharacterNameAvailable(characterCreate.Name), available =>
                     {
-                        session.SendError(3035, 13004);
-                        return;
-                    }
+                        if (!CharacterInfo.VerifyName(characterCreate.Name) || !available)
+                        {
+                            session.SendError(3035, 13004);
+                            return;
+                        }
 
-                    if (session.Characters?.Count >= session.ServiceAccount.AccountCharacterLimit)
-                    {
-                        session.SendError(3035, 13203);
-                        return;
-                    }
+                        if (session.Characters?.Count >= session.ServiceAccount.AccountCharacterLimit)
+                        {
+                            session.SendError(3035, 13203);
+                            return;
+                        }
 
-                    if (session.Characters?.Count(c => c.RealmId == realmInfo.Id) >= session.ServiceAccount.RealmCharacterLimit)
-                    {
-                        session.SendError(3035, 13204);
-                        return;
-                    }
+                        if (session.Characters?.Count(c => c.RealmId == realmInfo.Id) >= session.ServiceAccount.RealmCharacterLimit)
+                        {
+                            session.SendError(3035, 13204);
+                            return;
+                        }
 
-                    session.CharacterCreate = (realmInfo.Id, characterCreate.Name);
-                    session.Send(new ServerCharacterCreate
-                    {
-                        Sequence = session.Sequence,
-                        Type     = 1,
-                        Name     = characterCreate.Name,
-                        Realm    = realmInfo.Name
-                    });
+                        session.CharacterCreate = (realmInfo.Id, characterCreate.Name);
+                        session.Send(new ServerCharacterCreate
+                        {
+                            Sequence = session.Sequence,
+                            Type     = 1,
+                            Name     = characterCreate.Name,
+                            Realm    = realmInfo.Name
+                        });
+                    }));
                     break;
                 }
                 // create
@@ -191,34 +200,29 @@ namespace LobbyServer.Network.Handler
 
                     characterInfo.Finalise(AssetManager.GetNewCharacterId(), spawnPosition);
 
-                    try
+                    session.NewEvent(new DatabaseEvent(characterInfo.SaveToDatabase(), () =>
                     {
-                        await characterInfo.SaveToDatabase();
-                    }
-                    catch
+                        RealmInfo realmInfo = AssetManager.GetRealmInfo(session.CharacterCreate.RealmId);
+                        Debug.Assert(realmInfo != null);
+
+                        session.Send(new ServerCharacterCreate
+                        {
+                            Sequence    = session.Sequence,
+                            Type        = 2,
+                            Name        = characterCreate.Name,
+                            Realm       = realmInfo.Name,
+                            CharacterId = characterInfo.Id
+                        });
+
+                        session.Characters.Add(characterInfo);
+                        session.CharacterCreate = (0, string.Empty);
+                    }, exception =>
                     {
                         // should only occur if name was claimed in the time between verification and creation
                         session.SendError(3035, 13208);
-                        return;
-                    }
-
-                    RealmInfo realmInfo = AssetManager.GetRealmInfo(session.CharacterCreate.Item1);
-                    Debug.Assert(realmInfo != null);
-
-                    session.Send(new ServerCharacterCreate
-                    {
-                        Sequence    = session.Sequence,
-                        Type        = 2,
-                        Name        = characterCreate.Name,
-                        Realm       = realmInfo.Name,
-                        CharacterId = characterInfo.Id
-                    });
-
-                    session.Characters.Add(characterInfo);
-                    session.CharacterCreate = (0, string.Empty);
+                    }));
                     break;
                 }
-                    
             }
         }
 
@@ -229,7 +233,7 @@ namespace LobbyServer.Network.Handler
         }
 
         [SubPacketHandler(SubPacketClientOpcode.ClientEnterWorld, SubPacketHandlerFlags.RequiresEncryption | SubPacketHandlerFlags.RequiresAccount)]
-        public static async void HandleClientEnterWorld(LobbySession session, ClientEnterWorld enterWorld)
+        public static void HandleClientEnterWorld(LobbySession session, ClientEnterWorld enterWorld)
         {
             session.Sequence = enterWorld.Sequence;
 
@@ -241,17 +245,18 @@ namespace LobbyServer.Network.Handler
             if (realmInfo == null)
                 return;
 
-            await DatabaseManager.DataCentre.CreateCharacterSession(character.Id, session.Remote.ToString());
-            
-            session.Send(new ServerEnterWorld
+            session.NewEvent(new DatabaseEvent(DatabaseManager.DataCentre.CreateCharacterSession(character.Id, session.Remote.ToString()), () =>
             {
-                Sequence    = session.Sequence,
-                ActorId     = character.ActorId,
-                CharacterId = enterWorld.CharacterId,
-                Token       = "",
-                Host        = realmInfo.Host,
-                Port        = realmInfo.Port
-            });
+                session.Send(new ServerEnterWorld
+                {
+                    Sequence    = session.Sequence,
+                    ActorId     = character.ActorId,
+                    CharacterId = enterWorld.CharacterId,
+                    Token       = "",
+                    Host        = realmInfo.Host,
+                    Port        = realmInfo.Port
+                });
+            }));
         }
     }
 }

@@ -12,42 +12,50 @@ namespace WorldServer.Network.Handler
     public class AuthenticationHandler
     {
         [SubPacketHandler(SubPacketType.ClientHelloWorld)]
-        public static async void HandleClientHelloWorld(Session session, ClientHelloWorld helloWorld)
+        public static void HandleClientHelloWorld(Session session, ClientHelloWorld helloWorld)
         {
-            (uint ServiceAccountId, ulong CharacterId) characterSession = await DatabaseManager.DataCentre.GetCharacterSession(helloWorld.ActorId, session.Remote.ToString());
-            if (characterSession.ServiceAccountId == 0u)
-                return;
-
-            switch (session.Channel)
+            session.NewEvent(new DatabaseGenericEvent<(uint ServiceAccountId, ulong CharacterId)>(
+                DatabaseManager.DataCentre.GetCharacterSession(helloWorld.ActorId, session.Remote.ToString()),
+                characterSession =>
             {
-                case ConnectionChannel.World:
+                if (characterSession.ServiceAccountId == 0u)
+                    return;
+
+                switch (session.Channel)
                 {
-                    var worldSession = (WorldSession)session;
-                    if (worldSession.Player != null)
-                        return;
-
-                    List<CharacterInfo> characters = await DatabaseManager.DataCentre.GetCharacters(characterSession.ServiceAccountId);
-                    Debug.Assert(characters.Count > 0);
-                    CharacterInfo characterInfo = characters.SingleOrDefault(c => c.Id == characterSession.CharacterId);
-                    Debug.Assert(characterInfo != null);
-
-                    session.Send(new ServerHelloWorld
+                    case ConnectionChannel.World:
                     {
-                        ActorId  = helloWorld.ActorId
-                    });
+                        var worldSession = (WorldSession)session;
+                        if (worldSession.Player != null)
+                            return;
 
-                    worldSession.Player = new Player(worldSession, characterInfo);
-                    break;
-                }
-                case ConnectionChannel.Chat:
-                {
-                    session.Send(new ServerHelloWorld
+                        session.NewEvent(new DatabaseGenericEvent<List<CharacterInfo>>(
+                            DatabaseManager.DataCentre.GetCharacters(characterSession.ServiceAccountId),
+                            characters =>
+                        {
+                            Debug.Assert(characters.Count > 0);
+                            CharacterInfo characterInfo = characters.SingleOrDefault(c => c.Id == characterSession.CharacterId);
+                            Debug.Assert(characterInfo != null);
+
+                            session.Send(new ServerHelloWorld
+                            {
+                                ActorId = helloWorld.ActorId
+                            });
+
+                            worldSession.Player = new Player(worldSession, characterInfo);
+                        }));
+                        break;
+                    }
+                    case ConnectionChannel.Chat:
                     {
-                        ActorId  = helloWorld.ActorId
-                    });
-                    break;
+                        session.Send(new ServerHelloWorld
+                        {
+                            ActorId = helloWorld.ActorId
+                        });
+                        break;
+                    }
                 }
-            }
+            }));
         }
     }
 }

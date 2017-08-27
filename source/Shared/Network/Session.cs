@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Shared.Cryptography;
 using System.Net;
 using System.Net.Sockets;
+using Shared.Game;
 using Shared.Network.Message;
 
 namespace Shared.Network
@@ -17,6 +18,8 @@ namespace Shared.Network
         public IPAddress Local => connection.Local;
         public IPAddress Remote => connection.Remote;
         public ConnectionHeartbeat Heartbeat { get; } = new ConnectionHeartbeat();
+
+        private readonly Queue<IBaseEvent> events = new Queue<IBaseEvent>();
         
         protected Blowfish blowfish;
         protected Connection connection;
@@ -116,6 +119,14 @@ namespace Shared.Network
             return true;
         }
 
+        /// <summary>
+        /// Queue an event to be executed in a delayed threadsafe manner.
+        /// </summary>
+        public void NewEvent(IBaseEvent basicEvent)
+        {
+            events.Enqueue(basicEvent);
+        }
+
         public virtual void Update(double lastTick)
         {
             foreach (Packet packet in incomingPackets.DequeueMultiple(MaxIncomingPacketsPerUpdate))
@@ -134,6 +145,16 @@ namespace Shared.Network
                         Console.WriteLine(exception);
                     }
                 }
+            }
+
+            while (events.Count > 0)
+            {
+                IBaseEvent nextEvent = events.Peek();
+                if (!nextEvent.CanExecute())
+                    break;
+
+                events.Dequeue();
+                nextEvent.Execute();
             }
 
             (ConnectionHeartbeatResult result, uint pulseTime) = Heartbeat.Update(lastTick);
