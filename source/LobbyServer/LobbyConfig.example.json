@@ -22,7 +22,8 @@
       "Password": ""
     }
   },
-    "Server": {
-        "LobbyPort": 54994
-    }
+  "Server": {
+    "AssetPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\FINAL FANTASY XIV - A Realm Reborn",
+    "LobbyPort": 54994
+  }
 }
