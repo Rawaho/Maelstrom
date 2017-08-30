@@ -70,7 +70,7 @@ namespace WorldServer.Game.Entity
 
             SendMessageToVisible(new ServerActorMove
             {
-                Position = new WorldPosition((ushort)Map.Entry.Index, Position.Offset, Position.Orientation),
+                Position = new WorldPosition((ushort)Map.Entry.Key, Position.Offset, Position.Orientation),
             });
         }
 

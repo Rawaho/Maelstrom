@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using SaintCoinach.Xiv;
 using Shared.Command;
 using Shared.Game;
 using Shared.SqPack;
-using Shared.SqPack.GameTable;
 using WorldServer.Network;
 
 namespace WorldServer.Command
@@ -20,16 +20,14 @@ namespace WorldServer.Command
             string searchString = string.Join(" ", parameters);
 
             var matches = new List<(uint Index, string Name)>();
-            foreach (TerritoryTypeEntry territoryEntry in GameTableManager.TerritoryTypes.GetValues(ExdLanguage.None))
+            foreach (TerritoryType territoryEntry in GameTableManager.TerritoryTypes)
             {
                 if (territoryEntry.Name == string.Empty)
                     continue;
 
-                if (!GameTableManager.PlaceNames.TryGetValue(territoryEntry.PlaceNameId, ExdLanguage.En, out PlaceNameEntry placeNameEntry))
-                    continue;
-
-                if (placeNameEntry.Name.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
-                    matches.Add((territoryEntry.Index, placeNameEntry.Name));
+                string placeName = territoryEntry.PlaceName.Name.ToString();
+                if (placeName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
+                    matches.Add(((uint)territoryEntry.Key, placeName));
             }
 
             foreach ((uint Index, string Name) match in matches)

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Shared.SqPack.GameTable;
 using WorldServer.Game.Entity.Enums;
 using WorldServer.Network.Message;
 
@@ -7,7 +6,7 @@ namespace WorldServer.Game.Entity
 {
     public class Item
     {
-        public ItemEntry Template { get; }
+        public SaintCoinach.Xiv.Item Entry { get; }
 
         public ContainerType ContainerType { get; private set; } = ContainerType.None;
         public ushort Slot { get; private set; }
@@ -16,15 +15,15 @@ namespace WorldServer.Game.Entity
 
         private readonly Player owner;
 
-        public Item(Player player, ItemEntry template, ulong guid, uint stackSize = 1u)
+        public Item(Player player, SaintCoinach.Xiv.Item entry, ulong guid, uint stackSize = 1u)
         {
             Debug.Assert(player != null);
-            Debug.Assert(template != null);
+            Debug.Assert(entry != null);
             
-            owner         = player;
-            Template      = template;
-            Guid          = guid;
-            StackSize     = stackSize;
+            owner     = player;
+            Entry     = entry;
+            Guid      = guid;
+            StackSize = stackSize;
         }
 
         public void UpdatePosition(ContainerType containerType, ushort slot, bool update = false)
@@ -58,7 +57,7 @@ namespace WorldServer.Game.Entity
                 Index         = index,
                 ContainerType = ContainerType,
                 Slot          = Slot,
-                ItemId        = Template.Index,
+                ItemId        = (uint)Entry.Key,
                 StackSize     = StackSize
             });
         }
@@ -72,7 +71,7 @@ namespace WorldServer.Game.Entity
             {
                 ContainerType = ContainerType,
                 Slot          = Slot,
-                ItemId        = Template.Index,
+                ItemId        = (uint)Entry.Key,
                 StackSize     = StackSize
             });
         }

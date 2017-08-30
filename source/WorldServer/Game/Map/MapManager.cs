@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using SaintCoinach.Xiv;
 using Shared.SqPack;
-using Shared.SqPack.GameTable;
 using WorldServer.Game.Entity;
 
 namespace WorldServer.Game.Map
@@ -21,12 +21,12 @@ namespace WorldServer.Game.Map
             var sw = new Stopwatch();
             sw.Start();
 
-            foreach (TerritoryTypeEntry entry in GameTableManager.TerritoryTypes.GetValues(ExdLanguage.None))
+            foreach (TerritoryType entry in GameTableManager.TerritoryTypes)
             {
                 if (entry.Name == string.Empty)
                     continue;
 
-                territories.Add(entry.Index, new Territory(entry));
+                territories.Add((uint)entry.Key, new Territory(entry));
             }
 
             Console.WriteLine($"Initialised {territories.Count} map(s) in {sw.ElapsedMilliseconds}ms.");

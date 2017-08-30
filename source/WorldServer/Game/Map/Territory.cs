@@ -1,13 +1,13 @@
-﻿using Shared.SqPack.GameTable;
+﻿using SaintCoinach.Xiv;
 
 namespace WorldServer.Game.Map
 {
     public class Territory : BaseMap
     {
-        public TerritoryTypeEntry Entry { get; }
+        public TerritoryType Entry { get; }
         public byte Weather { get; private set; }
 
-        public Territory(TerritoryTypeEntry entry)
+        public Territory(TerritoryType entry)
         {
             Entry = entry;
         }

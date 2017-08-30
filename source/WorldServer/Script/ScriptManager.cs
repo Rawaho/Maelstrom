@@ -31,9 +31,9 @@ namespace WorldServer.Script
             switch ((EventHiType)(eventId >> 16))
             {
                 case EventHiType.Quest:
-                    return GameTableManager.Quests.Contains(eventId, ExdLanguage.En);
+                    return GameTableManager.Quests.ContainsRow((int)eventId);
                 case EventHiType.Opening:
-                    return GameTableManager.OpeningEvents.Contains(eventId, ExdLanguage.None);
+                    return GameTableManager.OpeningEvents.ContainsRow((int)eventId);
                 default:
                     throw new ArgumentException($"Unhandled EventHiType: {eventId >> 16}!", nameof(eventId));
             }

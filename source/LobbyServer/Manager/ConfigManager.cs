@@ -16,6 +16,7 @@ namespace LobbyServer.Manager
         public struct ConfigServer
         {
             public int LobbyPort { get; set; }
+            public string AssetPath { get; set; }
         }
 
         public ConfigMySql MySql { get; set; }

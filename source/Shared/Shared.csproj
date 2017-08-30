@@ -131,17 +131,8 @@
     <Compile Include="SqPack\ExdLanguage.cs" />
     <Compile Include="SqPack\ExdTable.cs" />
     <Compile Include="SqPack\Exh.cs" />
+    <Compile Include="SqPack\Extensions.cs" />
     <Compile Include="SqPack\GameTableManager.cs" />
-    <Compile Include="SqPack\GameTable\AchievementEntry.cs" />
-    <Compile Include="SqPack\GameTable\ClassJobEntry.cs" />
-    <Compile Include="SqPack\GameTable\EquipSlotCategoryEntry.cs" />
-    <Compile Include="SqPack\GameTable\ItemEntry.cs" />
-    <Compile Include="SqPack\GameTable\ItemUiCategoryEntry.cs" />
-    <Compile Include="SqPack\GameTable\OpeningEntry.cs" />
-    <Compile Include="SqPack\GameTable\PlaceNameEntry.cs" />
-    <Compile Include="SqPack\GameTable\QuestEntry.cs" />
-    <Compile Include="SqPack\GameTable\RaceEntry.cs" />
-    <Compile Include="SqPack\GameTable\TerritoryTypeEntry.cs" />
     <Compile Include="Network\SubPacketHandlerFlags.cs" />
   </ItemGroup>
   <ItemGroup>

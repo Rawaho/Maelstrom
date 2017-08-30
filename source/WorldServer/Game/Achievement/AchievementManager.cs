@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using Shared.SqPack;
-using Shared.SqPack.GameTable;
 using WorldServer.Game.Entity;
 using WorldServer.Network;
 using WorldServer.Network.Message;
@@ -36,7 +35,7 @@ namespace WorldServer.Game.Achievement
         /// </summary>
         public void UpdateCriteria(CriteriaType type, params int[] parameters)
         {
-            if (!GameTableManager.AchievementXCriteriaType.TryGetValue((byte)type, out ReadOnlyCollection<AchievementEntry> achievementEntries))
+            if (!GameTableManager.AchievementXCriteriaType.TryGetValue((byte)type, out ReadOnlyCollection<SaintCoinach.Xiv.Achievement> achievementEntries))
                 throw new ArgumentException($"Invalid CriteriaType: {type}!");
 
             if (type == CriteriaType.Counter)
@@ -48,9 +47,9 @@ namespace WorldServer.Game.Achievement
             }
             else
             {
-                foreach (AchievementEntry entry in achievementEntries)
+                foreach (SaintCoinach.Xiv.Achievement entry in achievementEntries)
                 {
-                    if (HasAchievement(entry.Index))
+                    if (HasAchievement((uint)entry.Key))
                         continue;
 
                     if (!CanUpdateCriteria(entry, parameters))
@@ -67,7 +66,7 @@ namespace WorldServer.Game.Achievement
         /// </summary>
         public void UpdateCriteriaCounter(CriteriaCounterType type, uint value)
         {
-            if (!GameTableManager.AchievementXCriteriaCounterType.TryGetValue((byte)type, out ReadOnlyCollection<AchievementEntry> achievementEntries))
+            if (!GameTableManager.AchievementXCriteriaCounterType.TryGetValue((byte)type, out ReadOnlyCollection<SaintCoinach.Xiv.Achievement> achievementEntries))
                 throw new ArgumentException($"Invalid CriteriaCounterType: {type}!");
 
             if (!counterCriteria.ContainsKey(type))
@@ -75,9 +74,9 @@ namespace WorldServer.Game.Achievement
             else
                 counterCriteria[type].IncrementValue(value);
 
-            foreach (AchievementEntry entry in achievementEntries)
+            foreach (SaintCoinach.Xiv.Achievement entry in achievementEntries)
             {
-                if (HasAchievement(entry.Index))
+                if (HasAchievement((uint)entry.Key))
                     continue;
 
                 if (GetAchievementCriteriaCounter(entry) >= GetAchievementCriteriaCounterMax(entry))
@@ -95,13 +94,13 @@ namespace WorldServer.Game.Achievement
         /// </summary>
         public void CheckAchievements()
         {
-            foreach (KeyValuePair<byte, ReadOnlyCollection<AchievementEntry>> pair in GameTableManager.AchievementXCriteriaType)
+            foreach (KeyValuePair<byte, ReadOnlyCollection<SaintCoinach.Xiv.Achievement>> pair in GameTableManager.AchievementXCriteriaType)
             {
                 CriteriaType type = (CriteriaType)pair.Key;
                 if (type == CriteriaType.Counter)
                     continue;
 
-                foreach (AchievementEntry entry in pair.Value)
+                foreach (SaintCoinach.Xiv.Achievement entry in pair.Value)
                     if (GetAchievementCriteriaCounter(entry) >= GetAchievementCriteriaCounterMax(entry))
                         CompleteAchievement(entry);
             }
@@ -110,15 +109,15 @@ namespace WorldServer.Game.Achievement
         /// <summary>
         /// Get current amount of criteria progress for Achievement.
         /// </summary>
-        private uint GetAchievementCriteriaCounter(AchievementEntry entry)
+        private uint GetAchievementCriteriaCounter(SaintCoinach.Xiv.Achievement entry)
         {
-            switch ((CriteriaType)entry.CriteriaType)
+            switch ((CriteriaType)entry.Type)
             {
                 case CriteriaType.Counter:
-                    CriteriaCounterType type = (CriteriaCounterType)entry.CriteriaData.CriteriaCounterTypeId;
+                    CriteriaCounterType type = (CriteriaCounterType)entry.GetCriteriaParameter(CriteriaParameter.CriteriaCounterTypeId);
                     return counterCriteria.ContainsKey(type) ? counterCriteria[type].Value : 0u;
                 case CriteriaType.Level:
-                    return owner.Character.GetClassInfo(entry.CriteriaData.JobClassId).Level;
+                    return owner.Character.GetClassInfo((uint)entry.GetCriteriaParameter(CriteriaParameter.JobClassId)).Level;
                 /* TODO: handle these types when related systems are implemented
                 case CriteriaType.Achievement:
                 case CriteriaType.MateriaMelding:
@@ -140,7 +139,7 @@ namespace WorldServer.Game.Achievement
                 default:
                 {
                     #if DEBUG
-                        Console.WriteLine($"Unhandled CriteriaType: {entry.CriteriaType}, unable to return valid criteria counter!");
+                        Console.WriteLine($"Unhandled CriteriaType: {entry.Type}, unable to return valid criteria counter!");
                     #endif
                     return 0;
                 }
@@ -150,13 +149,13 @@ namespace WorldServer.Game.Achievement
         /// <summary>
         /// Get amount of criteria required to complete Achievement.
         /// </summary>
-        private static int GetAchievementCriteriaCounterMax(AchievementEntry entry)
+        private static int GetAchievementCriteriaCounterMax(SaintCoinach.Xiv.Achievement entry)
         {
-            switch ((CriteriaType)entry.CriteriaType)
+            switch ((CriteriaType)entry.Type)
             {   
                 case CriteriaType.Achievement:
                 case CriteriaType.QuestCompleteAny:
-                    return entry.CriteriaParameters.Count(p => p != 0);
+                    return entry.Data.Count(p => p != 0);
                 case CriteriaType.MateriaMelding:
                 case CriteriaType.ChocoboRank:
                 case CriteriaType.PvPMatch:
@@ -164,14 +163,14 @@ namespace WorldServer.Game.Achievement
                 case CriteriaType.FrontlineCampaign:
                 case CriteriaType.FrontlineCampaignWinAny:
                 case CriteriaType.VerminionChallenge:
-                    return entry.CriteriaParameters[0];
+                    return entry.Data[0];
                 case CriteriaType.Counter:
                 case CriteriaType.Level:
                 case CriteriaType.PvPRank:
                 case CriteriaType.ReputationRank:
                 case CriteriaType.FrontlineCampaignWin:
                 case CriteriaType.Minion:
-                    return entry.CriteriaParameters[1];
+                    return entry.Data[1];
                 case CriteriaType.HuntingLog:
                 case CriteriaType.Exploration:
                 case CriteriaType.AetherCurrent:
@@ -180,29 +179,31 @@ namespace WorldServer.Game.Achievement
                 default:
                 {
                     #if DEBUG
-                        Console.WriteLine($"Unhandled CriteriaType: {entry.CriteriaType}, unable to return valid max criteria counter!");
+                        Console.WriteLine($"Unhandled CriteriaType: {entry.Type}, unable to return valid max criteria counter!");
                     #endif
                     return int.MaxValue;
                 }       
             }
         }
+
         
-        private bool CanUpdateCriteria(AchievementEntry entry, params int[] parameters)
+
+        private bool CanUpdateCriteria(SaintCoinach.Xiv.Achievement entry, params int[] parameters)
         {
             Debug.Assert(entry != null);
-            switch ((CriteriaType)entry.CriteriaType)
+            switch ((CriteriaType)entry.Type)
             {
                 case CriteriaType.Achievement:
                     if (parameters.Length < 1)
                         return false;
-                    return entry.CriteriaParameters.Contains(parameters[0]);
+                    return entry.Data.Contains(parameters[0]);
                 case CriteriaType.Level:
                 {
                     if (parameters.Length < 1)
                         return false;
-                    if (entry.CriteriaData.JobClassId != parameters[0])
+                    if (entry.GetCriteriaParameter(CriteriaParameter.JobClassId) != parameters[0])
                         return false;
-                    return entry.CriteriaData.ClassLevel < owner.Character.GetClassInfo((uint)parameters[0]).Level;
+                    return entry.GetCriteriaParameter(CriteriaParameter.ClassLevel) < owner.Character.GetClassInfo((uint)parameters[0]).Level;
                 }
                 /* TODO: handle these types when related systems are implemented
                 case CriteriaType.MateriaMelding:
@@ -224,25 +225,25 @@ namespace WorldServer.Game.Achievement
                 default:
                 {
                     #if DEBUG
-                        Console.WriteLine($"Unhandled AchievementCriteriaType: {entry.CriteriaType} in CanUpdateCriteria!");
+                        Console.WriteLine($"Unhandled AchievementCriteriaType: {entry.Type} in CanUpdateCriteria!");
                     #endif
                     return false;
                 }
             }
         }
 
-        private void CompleteAchievement(AchievementEntry entry)
+        private void CompleteAchievement(SaintCoinach.Xiv.Achievement entry)
         {
             Debug.Assert(entry != null);
 
-            completedAchievements.Add(new Achievement(entry.Index));
-            latestAchievements.Enqueue((ushort)entry.Index);
+            completedAchievements.Add(new Achievement((uint)entry.Key));
+            latestAchievements.Enqueue((ushort)entry.Key);
 
             // TODO: handle rewards properly
-            if (entry.RewardItemId != 0u)
-                owner.Inventory.NewItem(entry.RewardItemId);
+            if (entry.Item != null)
+                owner.Inventory.NewItem((uint)entry.Item.Key);
 
-            if (entry.RewardTitleId != 0u)
+            if (entry.Title != null)
             {
             }
 
@@ -251,13 +252,13 @@ namespace WorldServer.Game.Achievement
                 owner.Session.Send(new ServerActorAction2
                 {
                     Action     = ActorAction.AchievementComplete,
-                    Parameter1 = entry.Index
+                    Parameter1 = (uint)entry.Key
                 });
             
                 owner.SendMessageToVisible(new ServerActorAction2
                 {
                     Action     = ActorAction.AchievementCompleteChat,
-                    Parameter1 = entry.Index
+                    Parameter1 = (uint)entry.Key
                 });
             }
         }
@@ -276,7 +277,7 @@ namespace WorldServer.Game.Achievement
 
         public void SendAchievementCriteria(uint achievementId)
         {
-            if (!GameTableManager.Achievements.TryGetValue(achievementId, ExdLanguage.En, out AchievementEntry entry))
+            if (!GameTableManager.Achievements.TryGetValue(achievementId, out SaintCoinach.Xiv.Achievement entry))
                 throw new ArgumentException($"Invalid achievement id: {achievementId}");
 
             uint criteriaCounterMax = (uint)GetAchievementCriteriaCounterMax(entry);

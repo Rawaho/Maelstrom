@@ -56,8 +56,10 @@
     <Compile Include="Game\Achievement\CriteriaAdditionalRequirementAttribute.cs" />
     <Compile Include="Game\Achievement\CriteriaAttribute.cs" />
     <Compile Include="Game\Achievement\CriteriaCounterType.cs" />
+    <Compile Include="Game\Achievement\CriteriaParameter.cs" />
     <Compile Include="Game\Achievement\CriteriaType.cs" />
     <Compile Include="Game\Achievement\AchievementManager.cs" />
+    <Compile Include="Game\Achievement\Extensions.cs" />
     <Compile Include="Game\Entity\Actor.cs" />
     <Compile Include="Game\Entity\Enums\ActorType.cs" />
     <Compile Include="Game\Entity\Enums\ContainerEquippedSlot.cs" />
@@ -209,6 +211,10 @@
     <Folder Include="Script\Quest\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SaintCoinach\SaintCoinach\SaintCoinach.csproj">
+      <Project>{8a7d65eb-3de3-4631-b286-cc73a3126002}</Project>
+      <Name>SaintCoinach</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{758d086d-b10f-4468-a1a3-367cc647d024}</Project>
       <Name>Shared</Name>

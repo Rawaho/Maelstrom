@@ -25,7 +25,7 @@ namespace WorldServer
 
             ConfigManager.Initialise();
             DatabaseManager.Initialise(ConfigManager.Config.MySql.Authentication, ConfigManager.Config.MySql.DataCentre, ConfigManager.Config.MySql.World);
-            GameTableManager.Initialise();
+            GameTableManager.InitialiseWorld(ConfigManager.Config.Server.AssetPath);
             PacketManager.Initialise();
             ActorActionManager.Initalise();
             GmCommandManager.Initalise();

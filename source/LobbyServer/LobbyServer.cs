@@ -21,7 +21,7 @@ namespace LobbyServer
 
             ConfigManager.Initialise();
             DatabaseManager.Initialise(ConfigManager.Config.MySql.Authentication, ConfigManager.Config.MySql.DataCentre, ConfigManager.Config.MySql.World);
-            GameTableManager.Initialise();
+            GameTableManager.InitialiseLobby(ConfigManager.Config.Server.AssetPath);
             PacketManager.Initialise();
             NetworkManager.Initialise(ConfigManager.Config.Server.LobbyPort);
             AssetManager.Initalise();

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SaintCoinach.Xiv;
+using SaintCoinach.Xiv.Items;
 using Shared.Game.Enum;
 using Shared.SqPack;
-using Shared.SqPack.GameTable;
 using WorldServer.Game.Entity.Enums;
 using WorldServer.Manager;
 using WorldServer.Network;
@@ -26,22 +27,22 @@ namespace WorldServer.Game.Entity
         /// <summary>
         /// initialise an inventory for a new character with starting gear for class and race
         /// </summary>
-        public Inventory(Player owner, Race raceId, Sex sexId, ClassJob classJobId)
+        public Inventory(Player owner, Shared.Game.Enum.Race raceId, Sex sexId, Shared.Game.Enum.ClassJob classJobId)
         {
             Initialise(owner);
             
-            if (!GameTableManager.Races.TryGetValue((uint)raceId, ExdLanguage.En, out RaceEntry raceTemplate))
+            if (!GameTableManager.Races.TryGetValue((uint)raceId, out SaintCoinach.Xiv.Race raceEntry))
                 throw new ArgumentException($"Invalid race id {raceId}!");
                 
-            if (!GameTableManager.ClassJobs.TryGetValue((uint)classJobId, ExdLanguage.En, out ClassJobEntry classJobTemplate))
+            if (!GameTableManager.ClassJobs.TryGetValue((uint)classJobId, out SaintCoinach.Xiv.ClassJob classJobEntry))
                 throw new ArgumentException($"Invalid classJob id {classJobId}!");
 
             // default weapon and gear
-            EquipItem((uint)classJobTemplate.WeaponItemId);
-            EquipItem((uint)(sexId == Sex.Male ? raceTemplate.MaleBodyItemId : raceTemplate.FemaleBodyItemId));
-            EquipItem((uint)(sexId == Sex.Male ? raceTemplate.MaleHandsItemId : raceTemplate.FemaleHandsItemId));
-            EquipItem((uint)(sexId == Sex.Male ? raceTemplate.MaleLegsItemId : raceTemplate.FemaleLegsItemId));
-            EquipItem((uint)(sexId == Sex.Male ? raceTemplate.MaleFeetItemId : raceTemplate.FemaleFeetItemId));
+            EquipItem((uint)classJobEntry.StartingWeapon.Key);
+            foreach (SaintCoinach.Xiv.Item itemEntry in sexId == Sex.Male ? raceEntry.MaleRse : raceEntry.FemaleRse)
+                EquipItem((uint)itemEntry.Key);
+
+            // TODO: starting jewellery
         }
 
         private void Initialise(Player player)
@@ -77,7 +78,8 @@ namespace WorldServer.Game.Entity
             Item offhand  = container.GetItem((ushort)ContainerEquippedSlot.OffHand);
 
             // some main hands have a secondary model (eg: bow and quiver)
-            return (mainHand?.Template.ModelPrimary ?? 0ul, offhand?.Template.ModelSecondary ?? (mainHand?.Template.ModelSecondary ?? 0ul));
+            return ((ulong)(((Equipment)mainHand?.Entry)?.PrimaryModelKey.ToInt64() ?? 0L),
+                (ulong)(((Equipment)(mainHand?.Entry ?? offhand?.Entry))?.SecondaryModelKey.ToInt64() ?? 0L));
         }
 
         /// <summary>
@@ -88,7 +90,7 @@ namespace WorldServer.Game.Entity
             Container container = GetContainer(ContainerType.Equipped);
             for (ContainerEquippedSlot i = ContainerEquippedSlot.Head; i <= ContainerEquippedSlot.LeftRing; i++)
                 if (i != ContainerEquippedSlot.Waist)
-                    yield return (uint)(container.GetItem((ushort)i)?.Template.ModelPrimary ?? 0u);
+                    yield return (uint)(((Equipment)container.GetItem((ushort)i)?.Entry)?.PrimaryModelKey.ToInt64() ?? 0);
         }
 
         private void AddItem(Item item, Container container, ushort slot, bool update = false)
@@ -118,7 +120,7 @@ namespace WorldServer.Game.Entity
         /// </summary>
         public void NewItem(uint itemId, uint count = 1u)
         {
-            if (!GameTableManager.Items.TryGetValue(itemId, ExdLanguage.En, out ItemEntry template))
+            if (!GameTableManager.Items.TryGetValue(itemId, out SaintCoinach.Xiv.Item itemEntry))
                 throw new ArgumentException($"Invalid item id {itemId}!");
 
             uint countLeft = count;
@@ -128,14 +130,14 @@ namespace WorldServer.Game.Entity
                     break;
 
                 Container container = GetContainer(containerType);
-                if (template.MaxStackCount > 1)
+                if (itemEntry.StackSize > 1)
                 {
                     // update current item stacks before creating any new ones
-                    using (IEnumerator<(ushort Slot, Item Item)> enumerator = container.GetItems(template.Index).GetEnumerator())
+                    using (IEnumerator<(ushort Slot, Item Item)> enumerator = container.GetItems((uint)itemEntry.Key).GetEnumerator())
                     {
                         while (countLeft > 0 && enumerator.MoveNext())
                         {
-                            uint stackChange = Math.Min(template.MaxStackCount - enumerator.Current.Item.StackSize, countLeft);
+                            uint stackChange = Math.Min((uint)itemEntry.StackSize - enumerator.Current.Item.StackSize, countLeft);
                             if (stackChange == 0)
                                 continue;
                             
@@ -148,8 +150,8 @@ namespace WorldServer.Game.Entity
                 // create new items or stacks for remaining count
                 for (ushort slot = container.GetFirstAvailableSlot(); countLeft > 0 && slot != ushort.MaxValue; slot = container.GetFirstAvailableSlot())
                 {
-                    uint stackSize = Math.Min(template.MaxStackCount, countLeft);
-                    AddItem(new Item(owner, template, AssetManager.ItemId.DequeueValue(), stackSize), container, slot, true);
+                    uint stackSize = Math.Min((uint)itemEntry.StackSize, countLeft);
+                    AddItem(new Item(owner, itemEntry, AssetManager.ItemId.DequeueValue(), stackSize), container, slot, true);
                     
                     countLeft -= stackSize;
                 }
@@ -216,31 +218,33 @@ namespace WorldServer.Game.Entity
         /// </summary>
         public void EquipItem(uint itemId)
         {
-            if (!GameTableManager.Items.TryGetValue(itemId, ExdLanguage.En, out ItemEntry template))
+            if (!GameTableManager.Items.TryGetValue(itemId, out SaintCoinach.Xiv.Item itemEntry))
                 throw new ArgumentException($"Invalid item id {itemId}!");
-            
-            if (template.EquipSlotCategoryId == 0 || !GameTableManager.EquipSlotCategories.TryGetValue(template.EquipSlotCategoryId, ExdLanguage.None, out EquipSlotCategoryEntry equipSlotTemplate))
+
+            EquipSlotCategory equipSlotCategoryEntry = ((Equipment)itemEntry).EquipSlotCategory;
+            if (equipSlotCategoryEntry == null)
                 throw new ArgumentException($"Item id {itemId} can't be equipped!");
 
             // find first free slot for the item (some items such as rings can be equipped into multiple slots)
             Container container = GetContainer(ContainerType.Equipped);
-            foreach (ushort slot in equipSlotTemplate.GetEquipSlots())
+            foreach (var equipSlot in equipSlotCategoryEntry.PossibleSlots)
             {
-                if (container.GetItem(slot) != null)
+                if (container.GetItem((ushort)equipSlot.Key) != null)
                     continue;
 
-                _EquipItem(new Item(owner, template, AssetManager.ItemId.DequeueValue()), slot);
+                _EquipItem(new Item(owner, itemEntry, AssetManager.ItemId.DequeueValue()), (ushort)equipSlot.Key);
                 break;
             }
         }
 
         private void EquipItem(Item item, ushort slot)
         {
-            if (item.Template.EquipSlotCategoryId == 0 || !GameTableManager.EquipSlotCategories.TryGetValue(item.Template.EquipSlotCategoryId, ExdLanguage.None, out EquipSlotCategoryEntry equipSlotTemplate))
-                throw new ArgumentException($"Item id {item.Template.Index} can't be equipped!");
+            EquipSlotCategory equipSlotCategoryEntry = ((Equipment)item.Entry).EquipSlotCategory;
+            if (equipSlotCategoryEntry == null)
+                throw new ArgumentException($"Item id {item.Entry.Key} can't be equipped!");
 
-            if (!equipSlotTemplate.GetEquipSlots().Contains(slot))
-                throw new ArgumentException($"Item id {item.Template.Index} can't be equipped into slot {slot}!");
+            if (equipSlotCategoryEntry.PossibleSlots.All(s => s.Key != slot))
+                throw new ArgumentException($"Item id {item.Entry.Key} can't be equipped into slot {slot}!");
 
             _EquipItem(item, slot);
         }
@@ -301,7 +305,7 @@ namespace WorldServer.Game.Entity
                 // swapping an equipped item moves it to the appropriate Armoury Chest rather then the source location if not Armoury already
                 if (destination == ContainerType.Equipped && (source < ContainerType.ArmouryOffHand || source > ContainerType.ArmouryMainHand))
                 {
-                    srcContainer = GetContainer(AssetManager.EquipArmouryContainerTypes[(ItemUiCategory)dstItem.Template.UiCategoryId]);
+                    srcContainer = GetContainer(AssetManager.EquipArmouryContainerTypes[(ItemUiCategory)dstItem.Entry.ItemUICategory.Key]);
                     srcSlot      = srcContainer.GetFirstAvailableSlot();
 
                     // TODO: some error about full armoury

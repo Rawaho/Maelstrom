@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SaintCoinach.Xiv;
 using Shared.Cryptography;
 using Shared.Game;
 using Shared.SqPack;
-using Shared.SqPack.GameTable;
 
 namespace Shared.Database.Datacentre
 {
@@ -106,8 +107,11 @@ namespace Shared.Database.Datacentre
             Appearance    = new CharacterAppearanceInfo(row);
             SpawnPosition = new WorldPosition(row);
 
-            if (GameTableManager.ClassJobs.TryGetValue(ClassJobId, ExdLanguage.En, out ClassJobEntry entry))
-                ClassId = (byte)entry.ClassId;
+            Debug.Assert(GameTableManager.ClassJobs.ContainsRow(ClassJobId));
+            sbyte classId = GameTableManager.ClassJobs[ClassJobId].ClassId;
+            Debug.Assert(classId >= 0);
+
+            ClassId       = (byte)classId;
         }
 
         public void Finalise(ulong id, WorldPosition position)
@@ -131,10 +135,10 @@ namespace Shared.Database.Datacentre
 
         public CharacterClassInfo GetClassInfo(uint classJobId)
         {
-            if (!GameTableManager.ClassJobs.TryGetValue(classJobId, ExdLanguage.En, out ClassJobEntry classJobTemplate))
+            if (!GameTableManager.ClassJobs.TryGetValue(classJobId, out ClassJob classJobEntry))
                 throw new ArgumentException($"Invalid ClassJobId: {classJobId}!");
 
-            return classes[classJobTemplate.ClassId];
+            return classes[classJobEntry.ClassId];
         }
 
         public bool Verify()

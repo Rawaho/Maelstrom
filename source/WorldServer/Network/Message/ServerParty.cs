@@ -30,7 +30,7 @@ namespace WorldServer.Network.Message
                 ActorId     = player.Character.ActorId;
                 ClassJobId  = player.Character.ClassJobId;
                 Level       = player.Character.GetClassInfo(player.Character.ClassJobId).Level;
-                TerritoryId = (ushort)player.Map.Entry.Index;
+                TerritoryId = (ushort)player.Map.Entry.Key;
                 Hp          = 100;
                 MaxHp       = 100;
                 Mp          = 100;

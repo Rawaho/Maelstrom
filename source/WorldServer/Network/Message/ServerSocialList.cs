@@ -26,7 +26,7 @@ namespace WorldServer.Network.Message
             {
                 Id           = player.Character.Id;
                 Name         = player.Character.Name;
-                TerritoryId  = (ushort)player.Map.Entry.Index;
+                TerritoryId  = (ushort)player.Map.Entry.Key;
                 ClassJobId   = player.Character.ClassJobId;
                 Level        = player.Character.GetClassInfo(player.Character.ClassJobId).Level;
 

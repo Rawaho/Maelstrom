@@ -25,7 +25,7 @@ namespace WorldServer.Game.Entity
         public IEnumerable<(ushort Slot, Item Item)> GetItems(uint itemId)
         {
             for (ushort i = 0; i < items.Count; i++)
-                if (items[i]?.Template.Index == itemId)
+                if (items[i]?.Entry.Key == itemId)
                     yield return (i, items[i]);
         }
 
@@ -63,7 +63,7 @@ namespace WorldServer.Game.Entity
             items[slot] = item;
 
             #if DEBUG
-                Console.WriteLine($"Adding item {item.Template.Index} to container: {ContainerType}, slot: {slot}");
+                Console.WriteLine($"Adding item {item.Entry.Key} to container: {ContainerType}, slot: {slot}");
             #endif
             
             item.UpdatePosition(ContainerType, slot, update);
@@ -75,7 +75,7 @@ namespace WorldServer.Game.Entity
             items[item.Slot] = null;
 
             #if DEBUG
-                Console.WriteLine($"Removing item {item.Template.Index} from container: {ContainerType}, slot: {item.Slot}");
+                Console.WriteLine($"Removing item {item.Entry.Key} from container: {ContainerType}, slot: {item.Slot}");
             #endif
             
             item.UpdatePosition(ContainerType.None, ushort.MaxValue);

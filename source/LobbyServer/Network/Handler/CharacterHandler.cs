@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using LobbyServer.Manager;
 using LobbyServer.Network.Message;
+using SaintCoinach.Xiv;
 using Shared.Database;
 using Shared.Database.Datacentre;
 using Shared.Game;
 using Shared.Network;
 using Shared.SqPack;
-using Shared.SqPack.GameTable;
 
 namespace LobbyServer.Network.Handler
 {
@@ -190,8 +189,8 @@ namespace LobbyServer.Network.Handler
                     if (!characterInfo.Verify())
                         return;
 
-                    ClassJobEntry entry = GameTableManager.ClassJobs.GetValue(characterInfo.ClassJobId, ExdLanguage.En);
-                    Debug.Assert(entry != null);
+                    ClassJob entry = GameTableManager.ClassJobs[characterInfo.ClassJobId];
+                    Debug.Assert(entry.ClassId >= 0);
 
                     characterInfo.AddClassInfo((byte)entry.ClassId);
 
