@@ -1,3 +1,6 @@
 [submodule "source/SaintCoinach"]
 	path = source/SaintCoinach
 	url = https://github.com/Rawaho/SaintCoinach.git
+[submodule "source/SharpNav"]
+	path = source/SharpNav
+	url = https://github.com/Rawaho/SharpNav
