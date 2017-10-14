@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BD6CEF2A-1781-4BAB-B4C6-20CE0187770F}</ProjectGuid>
+    <ProjectGuid>{B01FE7A9-F9A1-468D-9A34-D2D11B68FC74}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>LobbyServer</RootNamespace>
-    <AssemblyName>LobbyServer</AssemblyName>
+    <RootNamespace>MapGenerator</RootNamespace>
+    <AssemblyName>MapGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -22,13 +23,12 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,7 +39,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
@@ -57,7 +56,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,46 +67,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\AccountHandler.cs" />
-    <Compile Include="Manager\AssetManager.cs" />
-    <Compile Include="Manager\ConfigManager.cs" />
-    <Compile Include="Network\Handler\AuthenticationHandler.cs" />
-    <Compile Include="Network\Handler\CharacterHandler.cs" />
-    <Compile Include="Network\LobbySession.cs" />
-    <Compile Include="Network\Message\ClientCharacterCreate.cs" />
-    <Compile Include="Network\Message\ClientCharacterList.cs" />
-    <Compile Include="Network\Message\ClientEnterWorld.cs" />
-    <Compile Include="Network\Message\ClientHello.cs" />
-    <Compile Include="Network\Message\ClientLobbyRequest.cs" />
-    <Compile Include="Network\Message\ServerCharacterCreate.cs" />
-    <Compile Include="Network\Message\ServerCharacterList.cs" />
-    <Compile Include="Network\Message\ServerEnterWorld.cs" />
-    <Compile Include="Network\Message\ServerError.cs" />
-    <Compile Include="Network\Message\ServerHello.cs" />
-    <Compile Include="Network\Message\ServerRealmList.cs" />
-    <Compile Include="Network\Message\ServerRetainerList.cs" />
-    <Compile Include="Network\Message\ServerServiceAccountList.cs" />
-    <Compile Include="Network\Token.cs" />
-    <Compile Include="LobbyServer.cs" />
+    <Compile Include="Parameters.cs" />
+    <Compile Include="MapGenerator.cs" />
+    <Compile Include="File\PcbFile.cs" />
+    <Compile Include="File\PcbListFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Manager\UpdateManager.cs" />
+    <Compile Include="TerritoryMesh.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="LobbyConfig.example.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaintCoinach\SaintCoinach\SaintCoinach.csproj">
-      <Project>{8a7d65eb-3de3-4631-b286-cc73a3126002}</Project>
+      <Project>{8A7D65EB-3DE3-4631-B286-CC73A3126002}</Project>
       <Name>SaintCoinach</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{758d086d-b10f-4468-a1a3-367cc647d024}</Project>
       <Name>Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpNav\Source\SharpNav\SharpNav.csproj">
+      <Project>{0e3c6e73-cce6-4148-b847-36487ffea225}</Project>
+      <Name>SharpNav</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

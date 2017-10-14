@@ -20,6 +20,7 @@ namespace Shared.SqPack
         public static IXivSheet OpeningEvents { get; private set; }
         public static IXivSheet<PlaceName> PlaceNames { get; private set; }
         public static IXivSheet<Race> Races { get; private set; }
+        public static IXivSheet<RecastNavimesh> RecastNavimesh { get; private set; }
         public static IXivSheet<TerritoryType> TerritoryTypes { get; private set; }
 
         /// <summary>
@@ -94,6 +95,14 @@ namespace Shared.SqPack
                 .ToDictionary(o => (ushort)o.Key, o => new ReadOnlyCollection<Achievement>(o.ToList())));
 
             Console.WriteLine($"Initialised GameTables in {sw.ElapsedMilliseconds}ms.");
+        }
+
+        public static void InitialiseMapGenerator(string assetPath)
+        {
+            Initialise(assetPath);
+
+            TerritoryTypes = LoadSheet<TerritoryType>();
+            RecastNavimesh = LoadSheet<RecastNavimesh>();
         }
     }
 }
